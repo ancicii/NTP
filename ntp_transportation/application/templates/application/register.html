@@ -5,7 +5,7 @@
   <div class="wrapper wrapper--w680">
     <div class="card card-4">
       <div class="card-body">
-        <h2 class="title">Registration Form</h2>
+        <h2 class="title">Registration</h2>
         <form method="POST">
           {% csrf_token %}
           <div class="row row-space">
@@ -13,9 +13,9 @@
               {% if form.name.errors %}
               <div class="alert alert-danger input-group">
               <strong>
-                  <label class="label">First Name</label>
+                  <label class="label">First Name</label> </strong>
                     {{form.name}}
-                    {{ form.name.errors|escape }} </strong>
+                    <strong style="margin-top: 10px"> {{ form.name.errors|escape }} </strong>
               </div>
                 {% else %}
                 <div class="input-group">
@@ -28,9 +28,9 @@
               {% if form.surname.errors %}
               <div class="alert alert-danger input-group">
               <strong>
-                  <label class="label">Last Name</label>
+                  <label class="label">Last Name</label></strong>
                     {{form.surname}}
-                    {{ form.surname.errors|escape }} </strong>
+                    <strong style="margin-top: 10px"> {{ form.surname.errors|escape }} </strong>
               </div>
                 {% else %}
                 <div class="input-group">
@@ -44,9 +44,9 @@
             <div class="col-6">
                 {% if form.email.errors %}
               <div class="alert alert-danger input-group">
-                  <strong> <label class="label">Email</label>
+                  <strong> <label class="label">Email</label></strong>
                    {{form.email}}
-                    {{ form.email.errors|escape }} </strong>
+                    <strong style="margin-top: 10px"> {{ form.email.errors|escape }} </strong>
               </div>
                 {% else %}
                 <div class="input-group">
@@ -59,9 +59,9 @@
               {% if form.username.errors %}
               <div class="alert alert-danger input-group">
               <strong>
-                  <label class="label">Username</label>
+                  <label class="label">Username</label></strong>
                     {{form.username}}
-                    {{ form.username.errors|escape }} </strong>
+                    <strong style="margin-top: 10px"> {{ form.username.errors|escape }} </strong>
               </div>
                 {% else %}
                 <div class="input-group">
@@ -76,9 +76,9 @@
                  {% if form.password1.errors %}
               <div class="alert alert-danger input-group">
               <strong>
-                  <label class="label">Password</label>
+                  <label class="label">Password</label></strong>
                     {{form.password1}}
-                    {{ form.password1.errors|escape }} </strong>
+                    <strong style="margin-top: 10px"> {{ form.password1.errors|escape }} </strong>
               </div>
                 {% else %}
                 <div class="input-group">
@@ -91,9 +91,9 @@
                  {% if form.password2.errors %}
               <div class="alert alert-danger input-group">
               <strong>
-                  <label class="label">Repeat Password</label>
+                  <label class="label">Repeat Password</label></strong>
                     {{form.password2}}
-                    {{ form.password2.errors|escape }} </strong>
+                    <strong style="margin-top: 10px"> {{ form.password2.errors|escape }} </strong>
               </div>
                 {% else %}
                 <div class="input-group">

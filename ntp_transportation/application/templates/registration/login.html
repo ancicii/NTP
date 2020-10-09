@@ -1,0 +1,61 @@
+{% extends 'application/main.html' %}
+
+{% block content %}
+<div class="page-wrapper bg-gra-01 p-t-90 font-poppins">
+  <div class="wrapper wrapper--w680">
+    <div class="card card-4">
+      <div class="card-body">
+        <h2 class="title">Login</h2>
+        <form method="POST">
+          {% csrf_token %}
+          <div class="row row-space">
+                {% if form.username.errors %}
+              <div class="alert alert-danger input-group">
+                  <strong> <label class="label">Email</label></strong>
+                   {{form.username}}
+                   <strong style="margin-top: 10px"> {{ form.username.errors|escape }} </strong>
+              </div>
+                {% else %}
+                <div class="input-group">
+
+                  <label class="label">Email</label>
+                    {{form.username}}
+                </div>
+                {% endif %}
+          </div>
+          <div class="row row-space">
+                 {% if form.password.errors %}
+              <div class="alert alert-danger input-group">
+              <strong>
+                  <label class="label">Password</label> </strong>
+                    {{form.password}}
+                    <strong style="margin-top: 10px"> {{ form.password.errors|escape }} </strong>
+              </div>
+                {% else %}
+                <div class="input-group">
+                  <label class="label">Password</label>
+                    {{form.password}}
+                </div>
+                {% endif %}
+          </div>
+
+
+
+
+            <div class="row">
+              <p>Don't have an account? Create one <a href="/register">here</a> </p>
+            </div>
+
+         <div class="p-t-55 center">
+              <button class="btn btn--radius-2 btn--blue" type="submit">Submit</button>
+            </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+{% endblock %}

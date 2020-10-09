@@ -10,7 +10,6 @@ from .forms import CreateUserForm
 def home(request):
     return render(request, 'application/home.html')
 
-
 def register(request):
     form = CreateUserForm()
     context = {}

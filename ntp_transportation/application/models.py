@@ -75,9 +75,9 @@ class Destination(models.Model):
     name = models.CharField(max_length=200)
     country = models.CharField(max_length=200)
     zipcode = models.CharField(max_length=50)
-    state = models.CharField(max_length=200)
-    longitude = models.DecimalField(max_digits=300, decimal_places=200)
-    latitude = models.DecimalField(max_digits=300, decimal_places=200)
+    state = models.CharField(max_length=200, null=True)
+    longitude = models.DecimalField(max_digits=50, decimal_places=38)
+    latitude = models.DecimalField(max_digits=50, decimal_places=38)
 
     def __str__(self):
         return self.name + ', ' + self.country

@@ -1,5 +1,5 @@
 from django.forms import  ModelForm
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django import forms
 from .models import User
 
@@ -16,3 +16,8 @@ class CreateUserForm(UserCreationForm):
             'email': forms.EmailInput(attrs={'class': 'input--style-4'}),
             'username': forms.TextInput(attrs={'class': 'input--style-4'}),
         }
+
+
+class UserLoginForm(AuthenticationForm):
+    username = forms.EmailField(widget=forms.TextInput(attrs={'class': 'input--style-4'}))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'input--style-4'}))
