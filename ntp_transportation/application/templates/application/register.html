@@ -1,0 +1,119 @@
+{% extends 'application/main.html' %}
+
+{% block content %}
+<div class="page-wrapper bg-gra-01 p-t-90 font-poppins">
+  <div class="wrapper wrapper--w680">
+    <div class="card card-4">
+      <div class="card-body">
+        <h2 class="title">Registration Form</h2>
+        <form method="POST">
+          {% csrf_token %}
+          <div class="row row-space">
+            <div class="col-6">
+              {% if form.name.errors %}
+              <div class="alert alert-danger input-group">
+              <strong>
+                  <label class="label">First Name</label>
+                    {{form.name}}
+                    {{ form.name.errors|escape }} </strong>
+              </div>
+                {% else %}
+                <div class="input-group">
+                  <label class="label">First Name</label>
+                    {{form.name}}
+                </div>
+                {% endif %}
+            </div>
+            <div class="col-6">
+              {% if form.surname.errors %}
+              <div class="alert alert-danger input-group">
+              <strong>
+                  <label class="label">Last Name</label>
+                    {{form.surname}}
+                    {{ form.surname.errors|escape }} </strong>
+              </div>
+                {% else %}
+                <div class="input-group">
+                  <label class="label">Last Name</label>
+                    {{form.surname}}
+                </div>
+                {% endif %}
+          </div>
+          </div>
+          <div class="row row-space">
+            <div class="col-6">
+                {% if form.email.errors %}
+              <div class="alert alert-danger input-group">
+                  <strong> <label class="label">Email</label>
+                   {{form.email}}
+                    {{ form.email.errors|escape }} </strong>
+              </div>
+                {% else %}
+                <div class="input-group">
+                  <label class="label">Email</label>
+                    {{form.email}}
+                </div>
+                {% endif %}
+            </div>
+            <div class="col-6">
+              {% if form.username.errors %}
+              <div class="alert alert-danger input-group">
+              <strong>
+                  <label class="label">Username</label>
+                    {{form.username}}
+                    {{ form.username.errors|escape }} </strong>
+              </div>
+                {% else %}
+                <div class="input-group">
+                  <label class="label">Username</label>
+                    {{form.username}}
+                </div>
+                {% endif %}
+            </div>
+          </div>
+          <div class="row row-space">
+            <div class="col-6">
+                 {% if form.password1.errors %}
+              <div class="alert alert-danger input-group">
+              <strong>
+                  <label class="label">Password</label>
+                    {{form.password1}}
+                    {{ form.password1.errors|escape }} </strong>
+              </div>
+                {% else %}
+                <div class="input-group">
+                  <label class="label">Password</label>
+                    {{form.password1}}
+                </div>
+                {% endif %}
+              </div>
+            <div class="col-6">
+                 {% if form.password2.errors %}
+              <div class="alert alert-danger input-group">
+              <strong>
+                  <label class="label">Repeat Password</label>
+                    {{form.password2}}
+                    {{ form.password2.errors|escape }} </strong>
+              </div>
+                {% else %}
+                <div class="input-group">
+                  <label class="label">Repeat Password</label>
+                    {{form.password2}}
+                </div>
+                {% endif %}
+              </div>
+          </div>
+
+
+            <div class="p-t-55 center">
+              <button class="btn btn--radius-2 btn--blue" type="submit">Submit</button>
+            </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}
