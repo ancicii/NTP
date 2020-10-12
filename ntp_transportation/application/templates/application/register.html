@@ -103,6 +103,38 @@
                 {% endif %}
               </div>
           </div>
+          <div class="row row-space">
+            <div class="col-6">
+                 {% if form.address.errors %}
+              <div class="alert alert-danger input-group">
+              <strong>
+                  <label class="label">address</label></strong>
+                    {{form.address}}
+                    <strong style="margin-top: 10px"> {{ form.address.errors|escape }} </strong>
+              </div>
+                {% else %}
+                <div class="input-group">
+                  <label class="label">address</label>
+                    {{form.address}}
+                </div>
+                {% endif %}
+              </div>
+            <div class="col-6">
+                 {% if form.city.errors %}
+              <div class="alert alert-danger input-group">
+              <strong>
+                  <label class="label">city</label></strong>
+                    {{form.city}}
+                    <strong style="margin-top: 10px"> {{ form.city.errors|escape }} </strong>
+              </div>
+                {% else %}
+                <div class="input-group">
+                  <label class="label">city</label>
+                    {{form.city}}
+                </div>
+                {% endif %}
+              </div>
+          </div>
 
 
             <div class="p-t-55 center">

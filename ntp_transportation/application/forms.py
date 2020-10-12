@@ -9,12 +9,14 @@ class CreateUserForm(UserCreationForm):
         password2 = forms.Field(widget=forms.PasswordInput(attrs={'class':'input--style-4'}))
         class Meta:
             model = User
-            fields = ['name', 'surname', 'email', 'username', 'password1', 'password2']
+            fields = ['name', 'surname', 'email', 'username', 'password1', 'password2', 'address', 'city']
             widgets = {
             'name': forms.TextInput(attrs={'class': 'input--style-4'}),
             'surname': forms.TextInput(attrs={'class': 'input--style-4'}),
             'email': forms.EmailInput(attrs={'class': 'input--style-4'}),
             'username': forms.TextInput(attrs={'class': 'input--style-4'}),
+            'address': forms.TextInput(attrs={'class': 'input--style-4'}),
+            'city': forms.TextInput(attrs={'class': 'input--style-4'}),
         }
 
 

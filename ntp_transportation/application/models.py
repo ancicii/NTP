@@ -1,5 +1,4 @@
-from django import forms
-from django.core.validators import MaxValueValidator, MinValueValidator
+from django.core.validators import MinValueValidator
 from django.db import models
 from .utils import RoleEnum
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
@@ -7,40 +6,47 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
 class MyAccountManager(BaseUserManager):
 
-    def create_user(self, email, username, name, surname, password=None):
+    def create_user(self, email, username, name, surname, address, city, password=None):
         if not email:
-            raise ValueError("Users must have an email address")
+            raise ValueError("User must have an email address")
         if not username:
-            raise ValueError("Users must have an username")
+            raise ValueError("User must have an username")
         if not name:
-            raise ValueError("Users must have a name")
+            raise ValueError("User must have a name")
         if not surname:
-            raise ValueError("Users must have a surname")
+            raise ValueError("User must have a surname")
+        if not address:
+            raise ValueError("User must have an address")
+        if not city:
+            raise ValueError("User must have a city")
 
         user = self.model(
             email=self.normalize_email(email),
             username=username,
             name=name,
             surname=surname,
+            address=address,
+            city=city,
         )
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email, username, name, surname, password):
+    def create_superuser(self, email, username, name, surname, address, city, password):
         user = self.create_user(
             email=self.normalize_email(email),
             password=password,
             username=username,
             name=name,
             surname=surname,
+            address=address,
+            city=city,
         )
         user.is_admin = True
         user.is_staff = True
         user.is_superuser = True
         user.save(using=self._db)
         return user
-
 
 
 class User(AbstractBaseUser):
@@ -55,6 +61,8 @@ class User(AbstractBaseUser):
     name = models.CharField(max_length=50)
     surname = models.CharField(max_length=50)
     role = models.CharField(max_length=50, choices=RoleEnum.choices(), default=RoleEnum.REGISTERED_USER)
+    address = models.CharField(max_length=254)
+    city = models.CharField(max_length=254)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username', 'name', 'surname']
@@ -91,11 +99,14 @@ class Parcel(models.Model):
     price = models.IntegerField(default=0, validators=[MinValueValidator(0)])
     sender = models.ForeignKey(User, null=False, on_delete=models.CASCADE, related_name='sender')
     receiver = models.ForeignKey(User, null=False, on_delete=models.CASCADE, related_name='receiver')
+    date = models.DateTimeField(verbose_name='date joined', auto_now_add=True)
+    isDelivered = models.BooleanField(default=False)
 
 
 class Train(models.Model):
     start_destination = models.ForeignKey(Destination, null=True, on_delete=models.SET_NULL,
                                           related_name='start_destination')
+    isAvailable = models.BooleanField(default=True)
 
 #
 # class Route(models.Model):
