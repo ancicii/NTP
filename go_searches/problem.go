@@ -1,5 +1,9 @@
 package main
 
+import (
+	"fmt"
+)
+
 type Problem struct {
 	parcels       []Parcel
 	trains        []Train
@@ -7,6 +11,65 @@ type Problem struct {
 	goalState     []State
 	initialState  []State
 	listOfActions []Action
+
+}
+
+
+func (p Problem) possibleActions(states []State) []Action{
+	var possibleActions []Action
+	for _, action := range p.listOfActions{
+		isPossible := true
+		for _, precondition := range action.preconditionsPositive{
+			if !containsState(states, precondition){
+				isPossible = false
+				break
+			}
+		}
+		for _, precondition := range action.preconditionsNegative{
+			if containsState(states, precondition) {
+				isPossible = false
+				break
+			}
+		}
+		if isPossible{
+			possibleActions = append(possibleActions, action)
+		}
+	}
+	return possibleActions
+}
+
+func (p Problem) checkGoal(stateMap map[string]int) bool {
+	for _, state1 := range p.goalState{
+		s := fmt.Sprintf("%s(%d,%d)", state1.name, state1.arguments[0], state1.arguments[1])
+		value, ok := stateMap[s]
+		if ok {
+			if value != 1{
+				return false
+			}
+		}else{
+			return false
+		}
+	}
+	return true
+}
+
+func (p Problem) possibleNodes(state []State, node *Node) []*Node {
+	actions := p.possibleActions(state)
+	//za svaku akciju kreiraj cvor 011101010 i vrati listu svih
+	var allNodes []*Node
+	for _, action := range actions{
+		state1 := make([]State, len(state))
+		copy(state1, state)
+		for _, remove := range action.effectsRemove {
+			state1 = removeState(state1, remove)
+		}
+		for _, add := range action.effectsAdd{
+			state1 = append(state1, add)
+		}
+		n1 := NewChildNode(state1, node, action.expression)
+		allNodes = append(allNodes, n1)
+	}
+	return allNodes
 
 }
 

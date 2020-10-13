@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"time"
+	"github.com/rs/xid"
 )
 
 //OPERATOR load, unload, travel
@@ -110,17 +111,23 @@ type User struct {
 
 //NODE
 type Node struct {
+	Id xid.ID
 	NodeState []State
 	Parent *Node
-	Children []*Node
 	Action ActionExpression //that got us to this state
 	Cost int
 	Depth int
 }
 
-func NewNode(state []State) Node{
-	var children []*Node
-	node := Node{state, nil, children, nil, 0, 0}
+
+func NewNode(state []State) *Node{
+	var actionEx ActionExpression
+	node := &Node{xid.New(), state, nil, actionEx, 0, 0}
+	return node
+}
+
+func NewChildNode(state []State, parent *Node, actionEx ActionExpression) *Node{
+	node := &Node{xid.New(), state, parent, actionEx, 0, parent.Depth+1}
 	return node
 }
 
