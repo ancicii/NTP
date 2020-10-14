@@ -55,7 +55,6 @@ func (p Problem) checkGoal(stateMap map[string]int) bool {
 
 func (p Problem) possibleNodes(state []State, node *Node) []*Node {
 	actions := p.possibleActions(state)
-	//za svaku akciju kreiraj cvor 011101010 i vrati listu svih
 	var allNodes []*Node
 	for _, action := range actions{
 		state1 := make([]State, len(state))
@@ -160,8 +159,6 @@ func TravelActions(trains []Train, destination []Destination, listOfActions []Ac
 					listOfActions = append(listOfActions, action)
 				}
 			}
-
-
 		}
 	}
 	return listOfActions

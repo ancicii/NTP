@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
-	"strconv"
 )
 
 func createProblem(parcels []int) Problem{
@@ -115,37 +114,6 @@ func getActions(n *Node) []string {
 	return reverse(actions)
 }
 
-func createStateMap(state []State, stateMap map[string]int) map[string]int {
-	for key, _ := range stateMap{
-		stateMap[key] = 0
-	}
-	for _, state1 := range state{
-		s := fmt.Sprintf("%s(%d,%d)", state1.name, state1.arguments[0], state1.arguments[1])
-		stateMap[s] = 1
-	}
-	return stateMap
-}
-
-
-func stateTo10(state []State, stateMap map[string]int) string {
-	s1 := ""
-	for key, element := range stateMap {
-		found := false
-		for _, state1 := range state{
-			s := fmt.Sprintf("%s(%d,%d)", state1.name, state1.arguments[0], state1.arguments[1])
-			if key == s {
-				s1 += strconv.Itoa(element)
-				found = true
-				break
-			}
-		}
-		if !found{
-			s1 += "0"
-		}
-	}
-	return s1
-
-}
 
 
 func main() {
@@ -163,6 +131,14 @@ func main() {
 
 		}
 	}
+
+	for _, parcel := range problem.parcels{
+		for _, train := range problem.trains{
+			s := fmt.Sprintf("in(%d,%d)", parcel.Id, train.Id)
+			stateMap[s] = 0
+		}
+	}
+
 	for _, destination := range problem.destination{
 		for _, train := range problem.trains{
 			s := fmt.Sprintf("train_at(%d,%d)", train.Id, destination.Id)
@@ -175,16 +151,16 @@ func main() {
 		}
 	}
 
-	for _, parcel := range problem.parcels{
-		for _, train := range problem.trains{
-			s := fmt.Sprintf("in(%d,%d)", parcel.Id, train.Id)
-			stateMap[s] = 0
-		}
-	}
 	fmt.Println("Starting Breadth First Search...")
 	n := BreadthFirstSearch(problem, stateMap)
 	fmt.Println(getActions(n))
 	fmt.Println("End of Breadth First Search...")
+
+	fmt.Println("Starting Depth First Search...")
+	n1 := DepthFirstSearch(NewNode(problem.initialState), problem, stateMap, []string{})
+	fmt.Println(getActions(n1))
+	fmt.Println("End of Depth First Search...")
+
 
 }
 

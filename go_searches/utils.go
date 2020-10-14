@@ -1,6 +1,11 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"reflect"
+	"sort"
+	"strconv"
+)
 
 func containsState(s []State, e State) bool {
 	s1 := fmt.Sprintf("%s(%d,%d)", e.name, e.arguments[0], e.arguments[1])
@@ -48,9 +53,9 @@ func containsDestination(s []Destination, e Destination) bool {
 	return false
 }
 
-func containsNode(nodes []*Node, toCheck *Node) bool {
+func containsNode(nodes []string, toCheck string) bool {
 	for _, a := range nodes {
-		if a.Id == toCheck.Id {
+		if a == toCheck {
 			return true
 		}
 	}
@@ -71,6 +76,43 @@ func reverse(input []string) []string {
 		return input
 	}
 	return append(reverse(input[1:]), input[0])
+}
+
+func stateTo10(state []State, stateMap map[string]int) string {
+	s1 := ""
+	keys := reflect.ValueOf(stateMap).MapKeys()
+	keysOrder := func(i, j int) bool { return keys[i].Interface().(string) < keys[j].Interface().(string) }
+	sort.Slice(keys, keysOrder)
+
+
+	for _, key := range keys {
+		found := false
+		for _, state1 := range state{
+			s := fmt.Sprintf("%s(%d,%d)", state1.name, state1.arguments[0], state1.arguments[1])
+			if key.Interface().(string) == s {
+				s1 += strconv.Itoa(stateMap[key.Interface().(string)])
+				found = true
+				break
+			}
+		}
+		if !found{
+			s1 += "0"
+		}
+	}
+	return s1
+
+}
+
+
+func createStateMap(state []State, stateMap map[string]int) map[string]int {
+	for key, _ := range stateMap{
+		stateMap[key] = 0
+	}
+	for _, state1 := range state{
+		s := fmt.Sprintf("%s(%d,%d)", state1.name, state1.arguments[0], state1.arguments[1])
+		stateMap[s] = 1
+	}
+	return stateMap
 }
 
 
