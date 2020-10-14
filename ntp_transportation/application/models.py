@@ -65,7 +65,7 @@ class User(AbstractBaseUser):
     city = models.CharField(max_length=254)
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username', 'name', 'surname']
+    REQUIRED_FIELDS = ['username', 'name', 'surname', 'address', 'city']
 
     objects = MyAccountManager()
 
@@ -95,11 +95,11 @@ class Parcel(models.Model):
     destination_from = models.ForeignKey(Destination, null=False, on_delete=models.CASCADE,
                                          related_name='destination_from')
     destination_to = models.ForeignKey(Destination, null=False, on_delete=models.CASCADE, related_name='destination_to')
-    weight = models.IntegerField(default=0, validators=[MinValueValidator(0)])
-    price = models.IntegerField(default=0, validators=[MinValueValidator(0)])
-    sender = models.ForeignKey(User, null=False, on_delete=models.CASCADE, related_name='sender')
-    receiver = models.ForeignKey(User, null=False, on_delete=models.CASCADE, related_name='receiver')
-    date = models.DateTimeField(verbose_name='date joined', auto_now_add=True)
+    weight = models.FloatField(default=0, validators=[MinValueValidator(0)])
+    price = models.FloatField(default=0, validators=[MinValueValidator(0)])
+    sender = models.ForeignKey(User, null=True, on_delete=models.CASCADE, related_name='sender')
+    receiver = models.ForeignKey(User, null=True, on_delete=models.CASCADE, related_name='receiver')
+    date = models.DateTimeField(verbose_name='date created', auto_now_add=True)
     isDelivered = models.BooleanField(default=False)
 
 

@@ -1,3 +1,32 @@
+@import url('//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css');
+
+.isa_info, .isa_success, .isa_warning, .isa_error {
+margin: 10px 0px;
+padding:12px;
+
+}
+.isa_info {
+    color: #00529B;
+    background-color: #BDE5F8;
+}
+.isa_success {
+    color: #4F8A10;
+    background-color: #DFF2BF;
+}
+.isa_warning {
+    color: #9F6000;
+    background-color: #FEEFB3;
+}
+.isa_error {
+    color: #D8000C;
+    background-color: #FFD2D2;
+}
+.isa_info i, .isa_success i, .isa_warning i, .isa_error i {
+    margin:10px 22px;
+    font-size:2em;
+    vertical-align:middle;
+}
+
 .carousel-item {
   height: 100vh;
   min-height: 300px;
@@ -42,7 +71,7 @@
 }
 
 .navbar-toggler {
-  background: #fff;
+  background: #ffffff;
 }
 
 .navbar-nav {
@@ -265,6 +294,10 @@ h6 {
   padding-top: 130px;
 }
 
+.p-t-230 {
+  padding-top: 230px;
+}
+
 .p-t-180 {
   padding-top: 180px;
 }
@@ -291,6 +324,9 @@ h6 {
 
 .m-r-45 {
   margin-right: 45px;
+}
+.m-b-45 {
+  margin-bottom: 45px;
 }
 .center {
   margin: 0;
@@ -684,6 +720,18 @@ input {
   color: #525252;
   font-weight: 400;
   margin-bottom: 40px;
+  text-align: center;
+}
+
+/* ==========================================================================
+   #TITLE
+   ========================================================================== */
+.title {
+  font-size: 24px;
+  color: #525252;
+  font-weight: 400;
+  margin-bottom: 40px;
+  text-align: center;
 }
 
 /* ==========================================================================

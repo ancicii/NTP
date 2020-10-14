@@ -105,8 +105,6 @@ func UniformCostSearch(problem Problem, stateMap map[string]int) *Node{
 			if (!isInExplored(explored, childToString)) && (!containsNode(list, childToString)){
 				heap.Push(priorityQueue, child)
 				list = append(list, stateTo10(child.NodeState, stateMap))
-			}else {
-				//priorityQueue.SwapIfLowerCost(node)
 			}
 		}
 

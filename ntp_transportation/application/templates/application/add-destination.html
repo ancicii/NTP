@@ -1,0 +1,118 @@
+{% extends 'application/main.html' %}
+
+{% block content %}
+<div class="page-wrapper bg-gra-01 p-t-90 font-poppins">
+  <div class="wrapper wrapper--w680">
+    <div class="card card-4">
+      <div class="card-body">
+        <h2 class="title">Add New Destination</h2>
+        <form method="POST">
+          {% csrf_token %}
+          <div class="row row-space">
+              {% if form.name.errors %}
+              <div class="alert alert-danger input-group">
+              <strong>
+                  <label class="label">Name</label> </strong>
+                    {{form.name}}
+                    <strong style="margin-top: 10px; font-size: 13px"> {{ form.name.errors|escape }} </strong>
+              </div>
+                {% else %}
+                  <label class="label">Name</label>
+                <div class="input-group">
+                    {{form.name}}
+                </div>
+                {% endif %}
+          </div>
+          <div class="row row-space">
+              {% if form.country.errors %}
+              <div class="alert alert-danger input-group">
+              <strong>
+                  <label class="label">Country</label> </strong>
+                    {{form.country}}
+                    <strong style="margin-top: 10px; font-size: 13px"> {{ form.country.errors|escape }} </strong>
+              </div>
+                {% else %}
+                <label class="label">Country</label>
+                <div class="input-group">
+                    {{form.country}}
+                </div>
+                {% endif %}
+          </div>
+        <div class="row row-space">
+              <div class="col-6">
+                 {% if form.zipcode.errors %}
+              <div class="alert alert-danger input-group">
+              <strong>
+                  <label class="label">Zipcode</label></strong>
+                    {{form.zipcode}}
+                    <strong style="margin-top: 10px; font-size: 13px"> {{ form.zipcode.errors|escape }} </strong>
+              </div>
+                {% else %}
+                <div class="input-group">
+                  <label class="label">Zipcode</label>
+                    {{form.zipcode}}
+                </div>
+                {% endif %}
+              </div>
+            <div class="col-6">
+                 {% if form.state.errors %}
+              <div class="alert alert-danger input-group">
+              <strong>
+                  <label class="label">State</label></strong>
+                    {{form.state}}
+                    <strong style="margin-top: 10px; font-size: 13px"> {{ form.state.errors|escape }} </strong>
+              </div>
+                {% else %}
+                <div class="input-group">
+                  <label class="label">State</label>
+                    {{form.state}}
+                </div>
+                {% endif %}
+              </div>
+          </div>
+        <div class="row row-space">
+              <div class="col-6">
+                 {% if form.longitude.errors %}
+              <div class="alert alert-danger input-group">
+              <strong>
+                  <label class="label">Longitude</label></strong>
+                    {{form.longitude}}
+                    <strong style="margin-top: 10px; font-size: 13px"> {{ form.longitude.errors|escape }} </strong>
+              </div>
+                {% else %}
+                <div class="input-group">
+                  <label class="label">Longitude</label>
+                    {{form.longitude}}
+                </div>
+                {% endif %}
+              </div>
+            <div class="col-6">
+                 {% if form.latitude.errors %}
+              <div class="alert alert-danger input-group">
+              <strong>
+                  <label class="label">Latitude</label></strong>
+                    {{form.latitude}}
+                    <strong style="margin-top: 10px; font-size: 13px"> {{ form.latitude.errors|escape }} </strong>
+              </div>
+                {% else %}
+                <div class="input-group">
+                  <label class="label">Latitude</label>
+                    {{form.latitude}}
+                </div>
+                {% endif %}
+              </div>
+          </div>
+
+
+            <div class="p-t-55 center">
+              <button class="btn btn--radius-2 btn--blue" type="submit">Submit</button>
+            </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}

@@ -10,12 +10,32 @@
         <li class="nav-item active">
           <a class="nav-link" href="/home" style="color: #fff;">Home</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/login" style="color: #fff;">Login</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/register" style="color: #fff;">Register</a>
-        </li>
+          {% if request.user.is_staff %}
+             <li class="nav-item">
+                <a class="nav-link" href="/addParcel" style="color: #fff;">Add Parcel</a>
+             </li>
+             <li class="nav-item">
+                <a class="nav-link" href="/addDestination" style="color: #fff;">Add Destination</a>
+             </li>
+             <li class="nav-item">
+                <a class="nav-link" href="/addTrain" style="color: #fff;">Add Train</a>
+             </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/sendParcels" style="color: #fff;">Send Parcels</a>
+             </li>
+          {% endif %}
+        {% if request.user.is_authenticated %}
+            <li class="nav-item">
+                <a class="nav-link" href="/logout" style="color: #fff;">Logout</a>
+            </li>
+        {% else %}
+            <li class="nav-item">
+                <a class="nav-link" href="/login" style="color: #fff;">Login</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/register" style="color: #fff;">Register</a>
+            </li>
+        {% endif %}
       </ul>
     </div>
   </div>

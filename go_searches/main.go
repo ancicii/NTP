@@ -114,9 +114,7 @@ func getActions(n *Node) []string {
 	return reverse(actions)
 }
 
-
-
-func main() {
+func doSearches() *Node{
 	pcs := []int{1,2,3}
 	var problem = createProblem(pcs)
 	stateMap := make(map[string]int)
@@ -151,21 +149,25 @@ func main() {
 		}
 	}
 
-	fmt.Println(distanceBetweenCities(problem.destination[0], problem.destination[1]))
-
 	fmt.Println("Starting Breadth First Search...")
 	n := BreadthFirstSearch(problem, stateMap)
 	fmt.Println(getActions(n))
 	fmt.Println("End of Breadth First Search...")
-	fmt.Println("Starting Depth First Search...")
-	n1 := DepthFirstSearch(NewNode(problem.initialState), problem, stateMap, []string{})
-	fmt.Println(getActions(n1))
-	fmt.Println("End of Depth First Search...")
-	fmt.Println("Starting Uniform Cost Search...")
-	n2 := UniformCostSearch(problem, stateMap)
-	fmt.Println(getActions(n2))
-	fmt.Println("End of Uniform Cost Search...")
+	return n
+	//fmt.Println("Starting Depth First Search...")
+	//n1 := DepthFirstSearch(NewNode(problem.initialState), problem, stateMap, []string{})
+	//fmt.Println(getActions(n1))
+	//fmt.Println("End of Depth First Search...")
+	//fmt.Println("Starting Uniform Cost Search...")
+	//n2 := UniformCostSearch(problem, stateMap)
+	//fmt.Println(getActions(n2))
+	//fmt.Println("End of Uniform Cost Search...")
 
+
+}
+
+
+func main() {
 
 }
 
