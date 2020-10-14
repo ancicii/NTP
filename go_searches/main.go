@@ -1,4 +1,14 @@
 package main
+import (
+
+	/*
+	typedef struct action{
+	char* actionStrings[300];
+	}action;
+
+	*/
+	"C"
+)
 
 import (
 	"database/sql"
@@ -114,8 +124,8 @@ func getActions(n *Node) []string {
 	return reverse(actions)
 }
 
-func doSearches() *Node{
-	pcs := []int{1,2,3}
+//export doSearches
+func doSearches(pcs []int, kindOfSearch string) C.action{
 	var problem = createProblem(pcs)
 	stateMap := make(map[string]int)
 	for _, parcel := range problem.parcels{
@@ -126,7 +136,6 @@ func doSearches() *Node{
 			}else{
 				stateMap[s] = 0
 			}
-
 		}
 	}
 
@@ -148,22 +157,43 @@ func doSearches() *Node{
 
 		}
 	}
+	var actionsReturn C.action
 
-	fmt.Println("Starting Breadth First Search...")
-	n := BreadthFirstSearch(problem, stateMap)
-	fmt.Println(getActions(n))
-	fmt.Println("End of Breadth First Search...")
-	return n
-	//fmt.Println("Starting Depth First Search...")
-	//n1 := DepthFirstSearch(NewNode(problem.initialState), problem, stateMap, []string{})
-	//fmt.Println(getActions(n1))
-	//fmt.Println("End of Depth First Search...")
-	//fmt.Println("Starting Uniform Cost Search...")
-	//n2 := UniformCostSearch(problem, stateMap)
-	//fmt.Println(getActions(n2))
-	//fmt.Println("End of Uniform Cost Search...")
+	if kindOfSearch == "BFS"{
+		fmt.Println("Starting Breadth First Search...")
+		n := BreadthFirstSearch(problem, stateMap)
+		fmt.Println(getActions(n))
+		fmt.Println("End of Breadth First Search...")
+		allActions := getActions(n)
+		for i, act := range  allActions{
+			actionsReturn.actionStrings[i] = C.CString(act)
+
+		}
+	}else if kindOfSearch == "DFS"{
+		fmt.Println("Starting Depth First Search...")
+		n := DepthFirstSearch(NewNode(problem.initialState), problem, stateMap, []string{})
+		fmt.Println(getActions(n))
+		fmt.Println("End of Depth First Search...")
+		allActions := getActions(n)
+		for i, act := range  allActions{
+			actionsReturn.actionStrings[i] = C.CString(act)
+
+		}
+	}else{
+		fmt.Println("Starting Breadth First Search...")
+		n := UniformCostSearch(problem, stateMap)
+		fmt.Println(getActions(n))
+		fmt.Println("End of Breadth First Search...")
+		allActions := getActions(n)
+		for i, act := range  allActions{
+			actionsReturn.actionStrings[i] = C.CString(act)
+
+		}
+	}
 
 
+
+	return actionsReturn
 }
 
 

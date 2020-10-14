@@ -1,5 +1,5 @@
 package main
-
+import "C"
 import "container/heap"
 
 func BreadthFirstSearch(problem Problem, stateMap map[string]int) *Node {

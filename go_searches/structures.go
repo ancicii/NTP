@@ -1,4 +1,5 @@
 package main
+import "C"
 
 import (
 	"database/sql"
@@ -85,8 +86,8 @@ type Parcel struct {
 	Price int
 	DestinationFrom int
 	DestinationTo int
-	ReceiverId int
-	SenderId int
+	ReceiverId sql.NullInt64
+	SenderId sql.NullInt64
 	Date time.Time
 	IsDelivered bool
 

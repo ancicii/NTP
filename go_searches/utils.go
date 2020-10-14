@@ -1,4 +1,6 @@
 package main
+import "C"
+
 
 import (
 	"fmt"
@@ -7,6 +9,13 @@ import (
 	"sort"
 	"strconv"
 )
+
+func bool2int(b bool) int {
+	if b {
+		return 1
+	}
+	return 0
+}
 
 func containsState(s []State, e State) bool {
 	s1 := fmt.Sprintf("%s(%d,%d)", e.name, e.arguments[0], e.arguments[1])

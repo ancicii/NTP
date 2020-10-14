@@ -8,14 +8,36 @@ from ctypes import *
 
 # Create your views here.
 
-def call_go_function():
-    lib = cdll.LoadLibrary("D:\\Faks\\VIII semestar - NTP\\NTP\\ntp_transportation\\application\\main.so")
-    # lib.doSearches.argtypes = [c_longlong, c_longlong]
-    print(lib.doSearches())
+class GoSlice(Structure):
+    _fields_ = [("data", POINTER(c_void_p)), ("len", c_longlong), ("cap", c_longlong)]
+
+
+class GoString(Structure):
+    _fields_ = [
+        ("p", c_char_p),
+        ("n", c_int)]
+
+
+class Action(Structure):
+    _fields_ = [('actionStrings', c_char_p*300)]
+
+
+def call_go_search_function(search):
+    lib = cdll.LoadLibrary("D:\\Faks\\VIII semestar - NTP\\NTP\\go_searches\\main.so")
+
+    lib.doSearches.argtypes = [GoSlice, GoString]
+    lib.doSearches.restype = Action
+
+    t = GoSlice((c_void_p * 3)(1, 2, 3), 3, 3)
+    search = GoString(c_char_p(search.encode('utf-8')), len(search))
+    f = lib.doSearches(t, search)
+    for i in f.actionStrings:
+        if i is not None:
+            print(i.decode('utf-8'))
 
 
 def home(request):
-    call_go_function()
+    call_go_search_function("BFS")
     return render(request, 'application/home.html')
 
 
