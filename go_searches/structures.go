@@ -3,7 +3,6 @@ package main
 import (
 	"database/sql"
 	"time"
-	"github.com/rs/xid"
 )
 
 //OPERATOR load, unload, travel
@@ -61,13 +60,15 @@ type Action struct {
 	preconditionsNegative []State
 	effectsAdd            []State
 	effectsRemove         []State
+	cost				  float64
 
 }
 
 func NewAction(expression ActionExpression, preconditionsPos []State, preconditionsNeg []State, effectsAdd []State, effectsRemove []State) Action{
-	action := Action{expression, preconditionsPos, preconditionsNeg, effectsAdd, effectsRemove}
+	action := Action{expression, preconditionsPos, preconditionsNeg, effectsAdd, effectsRemove, 0}
 	return action
 }
+
 
 //TRAIN
 type Train struct {
@@ -98,8 +99,8 @@ type Destination struct {
 	Country string
 	Zipcode string
 	State sql.NullString
-	Longitude float32
-	Latitude float32
+	Longitude float64
+	Latitude float64
 }
 
 //USER
@@ -111,23 +112,31 @@ type User struct {
 
 //NODE
 type Node struct {
-	Id xid.ID
 	NodeState []State
 	Parent *Node
-	Action ActionExpression //that got us to this state
-	Cost int
+	Action ActionExpression //akcija koja nas je dovela u ovo stanje
+	Cost float64 //g(x) cena od pocetnog cvora do cvora x
 	Depth int
+	index int //potrebno za priority queue
+	h float64 //h(x) heuristika, procenjena cena najjeftinije putanje od cvora x do cilja
+	f float64 //cost + h, za A* pretragu
 }
 
 
 func NewNode(state []State) *Node{
 	var actionEx ActionExpression
-	node := &Node{xid.New(), state, nil, actionEx, 0, 0}
+	node := &Node{state, nil, actionEx, 0, 0, 0, 0, 0}
 	return node
 }
 
 func NewChildNode(state []State, parent *Node, actionEx ActionExpression) *Node{
-	node := &Node{xid.New(), state, parent, actionEx, 0, parent.Depth+1}
+	node := &Node{state, parent, actionEx, 0, parent.Depth+1, 0 , 0, 0}
+	return node
+}
+
+func NewChildNodeCost(state []State, parent *Node, action Action) *Node{
+	cost := parent.Cost + action.cost
+	node := &Node{state, parent, action.expression, cost, parent.Depth+1, 0 , 0, 0}
 	return node
 }
 

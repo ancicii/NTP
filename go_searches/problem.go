@@ -1,6 +1,7 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
 )
 
@@ -11,7 +12,6 @@ type Problem struct {
 	goalState     []State
 	initialState  []State
 	listOfActions []Action
-
 }
 
 
@@ -78,10 +78,10 @@ func NewProblem(parcels []Parcel, trains []Train, destination []Destination, goa
 	return p
 }
 
-func AddActions(parcels []Parcel, trains []Train, destination []Destination, listOfActions []Action) []Action{
+func AddActions(parcels []Parcel, trains []Train, destination []Destination, listOfActions []Action, db *sql.DB) []Action{
 	listOfActions1 := LoadActions(parcels, trains, destination, listOfActions)
 	listOfActions2 := UnloadActions(parcels, trains, destination, listOfActions1)
-	listOfActions3 := TravelActions(trains, destination, listOfActions2)
+	listOfActions3 := TravelActions(trains, destination, listOfActions2, db)
 	return listOfActions3
 }
 //   Action(Load(p, t, d),
@@ -139,7 +139,7 @@ func UnloadActions(parcels []Parcel, trains []Train, destination []Destination, 
 	return listOfActions
 }
 
-func TravelActions(trains []Train, destination []Destination, listOfActions []Action) []Action {
+func TravelActions(trains []Train, destination []Destination, listOfActions []Action, db *sql.DB) []Action {
 	for _, from := range destination {
 		for _, to := range destination {
 			if from!= to {
@@ -156,10 +156,23 @@ func TravelActions(trains []Train, destination []Destination, listOfActions []Ac
 					argsExpr := []int{t.Id, from.Id, to.Id}
 					var aex = NewActionExpression(operator, argsExpr)
 					action := NewAction(aex, preconditionsPositive, preconditionsNegative, effectsAdd, effectsRemove)
-					listOfActions = append(listOfActions, action)
+					listOfActions = append(listOfActions, calculateCostOfAction(action, db))
 				}
 			}
 		}
 	}
 	return listOfActions
+}
+
+func calculateCostOfAction(action Action, db *sql.DB) Action {
+	var cost float64
+	if action.expression.operator == Load || action.expression.operator == Unload{
+		cost = 0
+	}else{
+		var destinationFrom = getDestination(db, action.expression.arguments[1])
+		var destinationTo = getDestination(db, action.expression.arguments[2])
+		cost = distanceBetweenCities(destinationFrom, destinationTo)
+	}
+	action.cost = cost
+	return action
 }

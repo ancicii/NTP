@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math"
 	"reflect"
 	"sort"
 	"strconv"
@@ -113,6 +114,26 @@ func createStateMap(state []State, stateMap map[string]int) map[string]int {
 		stateMap[s] = 1
 	}
 	return stateMap
+}
+
+func degreesToRadians(dg float64) float64{
+	return dg * math.Pi /180
+}
+
+func distanceBetweenCities(destination1 Destination, destination2 Destination) float64{
+	var earthRadiusKm float64 = 6378.1370
+
+	dLat := degreesToRadians(destination2.Latitude - destination1.Latitude)
+	dLon := degreesToRadians(destination2.Longitude - destination1.Longitude)
+
+	lat1 := degreesToRadians(destination1.Latitude)
+	lat2 := degreesToRadians(destination2.Latitude)
+
+	a := math.Pow(math.Sin(dLat/2), 2) + math.Pow(math.Sin(dLon/2), 2) * math.Cos(lat1) * math.Cos(lat2)
+	c := 2 * math.Atan2(math.Sqrt(a), math.Sqrt(1-a)) * earthRadiusKm
+	return c
+
+
 }
 
 
