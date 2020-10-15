@@ -1,5 +1,5 @@
 package main
-import "C"
+//import "C"
 
 import (
 	"database/sql"

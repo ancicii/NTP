@@ -1,13 +1,10 @@
 package main
-import "C"
-
+//import "C"
 
 import (
 	"fmt"
+	"github.com/elliotchance/orderedmap"
 	"math"
-	"reflect"
-	"sort"
-	"strconv"
 )
 
 func bool2int(b bool) int {
@@ -88,25 +85,14 @@ func reverse(input []string) []string {
 	return append(reverse(input[1:]), input[0])
 }
 
-func stateTo10(state []State, stateMap map[string]int) string {
+func stateTo10(stateMap *orderedmap.OrderedMap) string {
 	s1 := ""
-	keys := reflect.ValueOf(stateMap).MapKeys()
-	keysOrder := func(i, j int) bool { return keys[i].Interface().(string) < keys[j].Interface().(string) }
-	sort.Slice(keys, keysOrder)
 
-
-	for _, key := range keys {
-		found := false
-		for _, state1 := range state{
-			s := fmt.Sprintf("%s(%d,%d)", state1.name, state1.arguments[0], state1.arguments[1])
-			if key.Interface().(string) == s {
-				s1 += strconv.Itoa(stateMap[key.Interface().(string)])
-				found = true
-				break
-			}
-		}
-		if !found{
+	for el := stateMap.Front(); el != nil; el = el.Next() {
+		if el.Value == 0{
 			s1 += "0"
+		}else{
+			s1 += "1"
 		}
 	}
 	return s1
@@ -114,13 +100,13 @@ func stateTo10(state []State, stateMap map[string]int) string {
 }
 
 
-func createStateMap(state []State, stateMap map[string]int) map[string]int {
-	for key, _ := range stateMap{
-		stateMap[key] = 0
+func createStateMap(state []State, stateMap *orderedmap.OrderedMap) *orderedmap.OrderedMap {
+	for el := stateMap.Front(); el != nil; el = el.Next() {
+		stateMap.Set(el.Key, 0)
 	}
 	for _, state1 := range state{
 		s := fmt.Sprintf("%s(%d,%d)", state1.name, state1.arguments[0], state1.arguments[1])
-		stateMap[s] = 1
+		stateMap.Set(s, 1)
 	}
 	return stateMap
 }

@@ -1,8 +1,11 @@
 package main
-import "C"
-import "container/heap"
+//import "C"
+import (
+	"container/heap"
+	"github.com/elliotchance/orderedmap"
+)
 
-func BreadthFirstSearch(problem Problem, stateMap map[string]int) *Node {
+func BreadthFirstSearch(problem Problem, stateMap *orderedmap.OrderedMap) *Node {
 	state := problem.initialState
 	node := NewNode(state)			//pocetni cvor je pocetno stanje problema
 
@@ -10,8 +13,8 @@ func BreadthFirstSearch(problem Problem, stateMap map[string]int) *Node {
 		return node
 	}
 	queue := []*Node{ node } // kreiramo FIFO queue
-	var list []string		//lista cvorova iz queue-a u string reprezentaciji 1/0
-	var explored []string	//lista pretrazenih cvorova
+	var list []string		// lista cvorova iz queue-a u string reprezentaciji 1/0
+	var explored []string	// lista pretrazenih cvorova
 
 	for {
 		if len(queue) == 0 {
@@ -20,10 +23,10 @@ func BreadthFirstSearch(problem Problem, stateMap map[string]int) *Node {
 		leaf := queue[0]
 		queue = queue[1:]
 
-		explored = append(explored, stateTo10(leaf.NodeState, stateMap))
+		explored = append(explored, stateTo10(createStateMap(leaf.NodeState, stateMap)))
 		for _, child := range problem.possibleNodes(leaf.NodeState, leaf) {
 			stateMap = createStateMap(child.NodeState, stateMap)
-			childToString := stateTo10(child.NodeState, stateMap)
+			childToString := stateTo10(createStateMap(child.NodeState, stateMap))
 			if (!isInExplored(explored, childToString)) && (!containsNode(list, childToString)){
 				if problem.checkGoal(stateMap){
 					return child
@@ -37,11 +40,12 @@ func BreadthFirstSearch(problem Problem, stateMap map[string]int) *Node {
 	return nil
 }
 
-func DepthFirstSearch(node *Node, problem Problem, stateMap map[string]int, visitedNodes []string) *Node{
+func DepthFirstSearch(node *Node, problem Problem, stateMap *orderedmap.OrderedMap, list []string, explored []string) *Node{
 	stateMap1 := createStateMap(node.NodeState, stateMap)
 	if problem.checkGoal(stateMap1) {	//proverimo da li je pocetno stanje resenje
 		return node
 	}
+	explored = append(explored, stateTo10(stateMap1))
 	for _, action := range problem.possibleActions(node.NodeState) {
 		state1 := make([]State, len(node.NodeState))
 		copy(state1, node.NodeState)
@@ -52,10 +56,10 @@ func DepthFirstSearch(node *Node, problem Problem, stateMap map[string]int, visi
 			state1 = append(state1, add)
 		}
 		child := NewChildNode(state1, node, action.expression)
-		childToString := stateTo10(child.NodeState, stateMap1)
-		if !containsNode(visitedNodes, childToString){
-			visitedNodes = append(visitedNodes, childToString)
-			result := DepthFirstSearch(child, problem, stateMap1, visitedNodes)
+		childToString := stateTo10(createStateMap(child.NodeState, stateMap1))
+		if (!isInExplored(explored, childToString)) && (!containsNode(list, childToString)){
+			list = append(list, childToString)
+			result := DepthFirstSearch(child, problem, stateMap1, list, explored)
 			if result != nil {
 				return result
 			}
@@ -64,7 +68,7 @@ func DepthFirstSearch(node *Node, problem Problem, stateMap map[string]int, visi
 	return nil // nema resenja
 }
 
-func UniformCostSearch(problem Problem, stateMap map[string]int) *Node{
+func UniformCostSearch(problem Problem, stateMap *orderedmap.OrderedMap) *Node{
 	state := problem.initialState
 	node := NewNode(state)
 
@@ -75,7 +79,7 @@ func UniformCostSearch(problem Problem, stateMap map[string]int) *Node{
 	var list []string		//lista cvorova iz queue-a u string reprezentaciji 1/0
 	var explored []string	//lista pretrazenih cvorova
 
-	list = append(list, stateTo10(state, stateMap))
+	list = append(list, stateTo10(createStateMap(state, stateMap)))
 
 	for {
 		if priorityQueue.Len() == 0 {
@@ -87,7 +91,7 @@ func UniformCostSearch(problem Problem, stateMap map[string]int) *Node{
 		if problem.checkGoal(stateMap) {
 			return leaf
 		}
-		explored = append(explored, stateTo10(leaf.NodeState, stateMap))
+		explored = append(explored, stateTo10(stateMap))
 
 		for _, action := range problem.possibleActions(leaf.NodeState) {
 			state1 := make([]State, len(leaf.NodeState))
@@ -100,11 +104,10 @@ func UniformCostSearch(problem Problem, stateMap map[string]int) *Node{
 			}
 			child := NewChildNodeCost(state1, leaf, action)
 
-			stateMap = createStateMap(child.NodeState, stateMap)
-			childToString := stateTo10(child.NodeState, stateMap)
+			childToString := stateTo10(createStateMap(child.NodeState, stateMap))
 			if (!isInExplored(explored, childToString)) && (!containsNode(list, childToString)){
 				heap.Push(priorityQueue, child)
-				list = append(list, stateTo10(child.NodeState, stateMap))
+				list = append(list, childToString)
 			}
 		}
 

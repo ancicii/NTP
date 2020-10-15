@@ -83,7 +83,7 @@ class Destination(models.Model):
     name = models.CharField(max_length=200)
     country = models.CharField(max_length=200)
     zipcode = models.CharField(max_length=50)
-    state = models.CharField(max_length=200, null=True)
+    state = models.CharField(max_length=200, null=True, blank=True)
     longitude = models.DecimalField(max_digits=50, decimal_places=38)
     latitude = models.DecimalField(max_digits=50, decimal_places=38)
 

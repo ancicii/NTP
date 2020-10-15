@@ -1,9 +1,10 @@
 package main
-import "C"
+//import "C"
 
 import (
 	"database/sql"
 	"fmt"
+	"github.com/elliotchance/orderedmap"
 )
 
 type Problem struct {
@@ -39,10 +40,12 @@ func (p Problem) possibleActions(states []State) []Action{
 	return possibleActions
 }
 
-func (p Problem) checkGoal(stateMap map[string]int) bool {
+func (p Problem) checkGoal(stateMap *orderedmap.OrderedMap) bool {
+	for el := stateMap.Front(); el != nil; el = el.Next() {}
+
 	for _, state1 := range p.goalState{
 		s := fmt.Sprintf("%s(%d,%d)", state1.name, state1.arguments[0], state1.arguments[1])
-		value, ok := stateMap[s]
+		value, ok := stateMap.Get(s)
 		if ok {
 			if value != 1{
 				return false

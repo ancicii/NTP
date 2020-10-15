@@ -1,7 +1,7 @@
 // preuzeto sa: https://golang.org/pkg/container/heap/
 
 package main
-import "C"
+//import "C"
 
 // A PriorityQueue implements heap.Interface and holds Items.
 type PriorityQueue []*Node

@@ -2,9 +2,9 @@ package main
 import (
 
 	/*
-	typedef struct action{
-	char* actionStrings[300];
-	}action;
+		typedef struct action{
+		char* actionStrings[800];
+		}action;
 
 	*/
 	"C"
@@ -13,6 +13,7 @@ import (
 import (
 	"database/sql"
 	"fmt"
+	"github.com/elliotchance/orderedmap"
 	_ "github.com/go-sql-driver/mysql"
 )
 
@@ -123,18 +124,18 @@ func getActions(n *Node) []string {
 
 	return reverse(actions)
 }
-
 //export doSearches
 func doSearches(pcs []int, kindOfSearch string) C.action{
 	var problem = createProblem(pcs)
-	stateMap := make(map[string]int)
+	stateMap := orderedmap.NewOrderedMap()
 	for _, parcel := range problem.parcels{
 		for _, destination := range problem.destination{
 			s := fmt.Sprintf("at(%d,%d)", parcel.Id, destination.Id)
 			if parcel.DestinationFrom == destination.Id {
-				stateMap[s] = 1
+				stateMap.Set(s, 1)
 			}else{
-				stateMap[s] = 0
+				stateMap.Set(s, 0)
+
 			}
 		}
 	}
@@ -142,7 +143,8 @@ func doSearches(pcs []int, kindOfSearch string) C.action{
 	for _, parcel := range problem.parcels{
 		for _, train := range problem.trains{
 			s := fmt.Sprintf("in(%d,%d)", parcel.Id, train.Id)
-			stateMap[s] = 0
+			stateMap.Set(s, 0)
+
 		}
 	}
 
@@ -150,9 +152,11 @@ func doSearches(pcs []int, kindOfSearch string) C.action{
 		for _, train := range problem.trains{
 			s := fmt.Sprintf("train_at(%d,%d)", train.Id, destination.Id)
 			if train.StartDestination == destination.Id {
-				stateMap[s] = 1
+				stateMap.Set(s, 1)
+
 			}else{
-				stateMap[s] = 0
+				stateMap.Set(s, 0)
+
 			}
 
 		}
@@ -171,7 +175,7 @@ func doSearches(pcs []int, kindOfSearch string) C.action{
 		}
 	}else if kindOfSearch == "DFS"{
 		fmt.Println("Starting Depth First Search...")
-		n := DepthFirstSearch(NewNode(problem.initialState), problem, stateMap, []string{})
+		n := DepthFirstSearch(NewNode(problem.initialState), problem, stateMap, []string{}, []string{})
 		fmt.Println(getActions(n))
 		fmt.Println("End of Depth First Search...")
 		allActions := getActions(n)
@@ -180,10 +184,10 @@ func doSearches(pcs []int, kindOfSearch string) C.action{
 
 		}
 	}else{
-		fmt.Println("Starting Breadth First Search...")
+		fmt.Println("Starting Uniform Cost First Search...")
 		n := UniformCostSearch(problem, stateMap)
 		fmt.Println(getActions(n))
-		fmt.Println("End of Breadth First Search...")
+		fmt.Println("End of Uniform Cost Search...")
 		allActions := getActions(n)
 		for i, act := range  allActions{
 			actionsReturn.actionStrings[i] = C.CString(act)
@@ -191,13 +195,11 @@ func doSearches(pcs []int, kindOfSearch string) C.action{
 		}
 	}
 
-
-
 	return actionsReturn
 }
 
-
 func main() {
+
 
 }
 
