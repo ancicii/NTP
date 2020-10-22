@@ -15,10 +15,11 @@ import (
 	"fmt"
 	"github.com/elliotchance/orderedmap"
 	_ "github.com/go-sql-driver/mysql"
+	"strconv"
 )
 
 func createProblem(parcels []int) Problem{
-	var listOfDestinations []Destination
+	var listOfDestinations []string
 	var listOfParcels []Parcel
 	var initialState []State
 	var goalState []State
@@ -33,10 +34,10 @@ func createProblem(parcels []int) Problem{
 	var listOfTrains = getTrains(db)
 
 	for _, train := range listOfTrains{
-		var state = NewState("train_at", [2]int {train.Id, train.StartDestination})
-		var destinationStart = getDestination(db, train.StartDestination)
-		if !containsDestination(listOfDestinations, destinationStart) {
-			listOfDestinations = append(listOfDestinations, destinationStart)
+		var state = NewState("train_at", [2]string {strconv.Itoa(train.Id), train.StartDestination})
+		//var destinationStart = getDestination(db, train.StartDestination)
+		if !containsDestination(listOfDestinations, train.StartDestination) {
+			listOfDestinations = append(listOfDestinations, train.StartDestination)
 		}
 		initialState = append(initialState, state)
 	}
@@ -55,17 +56,17 @@ func createProblem(parcels []int) Problem{
 			if err != nil {
 				panic(err.Error())
 			}
-			var state = NewState("at", [2]int {p.Id, p.DestinationFrom})
-			var state2 = NewState("at", [2]int {p.Id, p.DestinationTo})
+			var state = NewState("at", [2]string {strconv.Itoa(p.Id), p.DestinationFrom})
+			var state2 = NewState("at", [2]string {strconv.Itoa(p.Id), p.DestinationTo})
 			initialState = append(initialState, state)
 			goalState = append(goalState, state2)
-			var destinationTo = getDestination(db, p.DestinationTo)
-			var destinationFrom = getDestination(db, p.DestinationFrom)
-			if !containsDestination(listOfDestinations, destinationTo) {
-				listOfDestinations = append(listOfDestinations, destinationTo)
+			//var destinationTo = getDestination(db, p.DestinationTo)
+			//var destinationFrom = getDestination(db, p.DestinationFrom)
+			if !containsDestination(listOfDestinations,  p.DestinationTo) {
+				listOfDestinations = append(listOfDestinations,  p.DestinationTo)
 			}
-			if !containsDestination(listOfDestinations, destinationFrom) {
-				listOfDestinations = append(listOfDestinations, destinationFrom)
+			if !containsDestination(listOfDestinations, p.DestinationFrom) {
+				listOfDestinations = append(listOfDestinations, p.DestinationFrom)
 			}
 			listOfParcels = append(listOfParcels, p)
 		}
@@ -77,7 +78,7 @@ func createProblem(parcels []int) Problem{
 
 }
 
-func getDestination(db *sql.DB, id int) Destination{
+/*func getDestination(db *sql.DB, id int) Destination{
 	sqlRaw := fmt.Sprintf(`SELECT * FROM application_destination WHERE id IN ('%d')`, id)
 	destinations, err := db.Query(sqlRaw)
 	if err != nil {
@@ -91,7 +92,7 @@ func getDestination(db *sql.DB, id int) Destination{
 		}
 	}
 	return d
-}
+}*/
 
 func getTrains(db *sql.DB) []Train{
 	sqlRaw := fmt.Sprintf(`SELECT * FROM application_train WHERE isAvailable`)
@@ -114,10 +115,16 @@ func getTrains(db *sql.DB) []Train{
 func getActions(n *Node) []string {
 	node := n
 	var actions []string
-
+	var s string
 	for node.Parent != nil {
-		s := fmt.Sprintf("%s(%d,%d,%d)", node.Action.operator, node.Action.arguments[0], node.Action.arguments[1],
-			node.Action.arguments[2])
+		if node.Action.operator == Load || node.Action.operator == Unload{
+			s = fmt.Sprintf("%s(parcel_%s;train_%s;%s)", node.Action.operator, node.Action.arguments[0], node.Action.arguments[1],
+				node.Action.arguments[2])
+		}else {
+			s = fmt.Sprintf("%s(train_%s;%s;%s)", node.Action.operator, node.Action.arguments[0], node.Action.arguments[1],
+				node.Action.arguments[2])
+		}
+
 		actions = append(actions, s)
 		node = node.Parent
 	}
@@ -130,8 +137,8 @@ func doSearches(pcs []int, kindOfSearch string) C.action{
 	stateMap := orderedmap.NewOrderedMap()
 	for _, parcel := range problem.parcels{
 		for _, destination := range problem.destination{
-			s := fmt.Sprintf("at(%d,%d)", parcel.Id, destination.Id)
-			if parcel.DestinationFrom == destination.Id {
+			s := fmt.Sprintf("at(%d,%s)", parcel.Id, destination)
+			if parcel.DestinationFrom == destination {
 				stateMap.Set(s, 1)
 			}else{
 				stateMap.Set(s, 0)
@@ -150,8 +157,8 @@ func doSearches(pcs []int, kindOfSearch string) C.action{
 
 	for _, destination := range problem.destination{
 		for _, train := range problem.trains{
-			s := fmt.Sprintf("train_at(%d,%d)", train.Id, destination.Id)
-			if train.StartDestination == destination.Id {
+			s := fmt.Sprintf("train_at(%d,%s)", train.Id, destination)
+			if train.StartDestination == destination {
 				stateMap.Set(s, 1)
 
 			}else{
@@ -199,7 +206,6 @@ func doSearches(pcs []int, kindOfSearch string) C.action{
 }
 
 func main() {
-
 
 }
 

@@ -5,12 +5,13 @@ import (
 	"database/sql"
 	"fmt"
 	"github.com/elliotchance/orderedmap"
+	"strconv"
 )
 
 type Problem struct {
 	parcels       []Parcel
 	trains        []Train
-	destination   []Destination
+	destination   []string
 	goalState     []State
 	initialState  []State
 	listOfActions []Action
@@ -44,7 +45,7 @@ func (p Problem) checkGoal(stateMap *orderedmap.OrderedMap) bool {
 	for el := stateMap.Front(); el != nil; el = el.Next() {}
 
 	for _, state1 := range p.goalState{
-		s := fmt.Sprintf("%s(%d,%d)", state1.name, state1.arguments[0], state1.arguments[1])
+		s := fmt.Sprintf("%s(%s,%s)", state1.name, state1.arguments[0], state1.arguments[1])
 		value, ok := stateMap.Get(s)
 		if ok {
 			if value != 1{
@@ -76,13 +77,13 @@ func (p Problem) possibleNodes(state []State, node *Node) []*Node {
 
 }
 
-func NewProblem(parcels []Parcel, trains []Train, destination []Destination, goalState []State, initialState []State) Problem {
+func NewProblem(parcels []Parcel, trains []Train, destination []string, goalState []State, initialState []State) Problem {
 	listOfActions := make([]Action, 0)
 	p := Problem {parcels, trains, destination, goalState, initialState, listOfActions}
 	return p
 }
 
-func AddActions(parcels []Parcel, trains []Train, destination []Destination, listOfActions []Action, db *sql.DB) []Action{
+func AddActions(parcels []Parcel, trains []Train, destination []string, listOfActions []Action, db *sql.DB) []Action{
 	listOfActions1 := LoadActions(parcels, trains, destination, listOfActions)
 	listOfActions2 := UnloadActions(parcels, trains, destination, listOfActions1)
 	listOfActions3 := TravelActions(trains, destination, listOfActions2, db)
@@ -92,21 +93,21 @@ func AddActions(parcels []Parcel, trains []Train, destination []Destination, lis
 //   PRECOND: At(p, d) ∧ At(t, d) ∧ Parcel(p) ∧ Train(t) ∧ Destination(d)
 //   EFFECT: ¬ At(p, d) ∧ In(p, t))
 
-func LoadActions(parcels []Parcel, trains []Train, destination []Destination, listOfActions []Action) []Action {
+func LoadActions(parcels []Parcel, trains []Train, destination []string, listOfActions []Action) []Action {
 	for _, d := range destination {
 		for _, p := range parcels {
 			for _, t := range trains {
-				argsPositive := [2]int{p.Id, d.Id}
-				argsPositive1 := [2]int{t.Id, d.Id}
-				argsAdd := [2]int{p.Id, t.Id}
-				argsRemove := [2]int{p.Id, d.Id}
+				argsPositive := [2]string{strconv.Itoa(p.Id), d}
+				argsPositive1 := [2]string{strconv.Itoa(t.Id), d}
+				argsAdd := [2]string{strconv.Itoa(p.Id), strconv.Itoa(t.Id)}
+				argsRemove := [2]string{strconv.Itoa(p.Id), d}
 				effectsAdd := []State{NewState("in", argsAdd)}
 				effectsRemove := []State{NewState("at", argsRemove)}
 				preconditionsPositive := []State{NewState("at", argsPositive), NewState("train_at", argsPositive1)}
 				var preconditionsNegative []State
 
 				var operator = Load
-				argsExpr := []int{p.Id, t.Id, d.Id}
+				argsExpr := []string{strconv.Itoa(p.Id), strconv.Itoa(t.Id), d}
 				var aex = NewActionExpression(operator, argsExpr)
 				action := NewAction(aex, preconditionsPositive, preconditionsNegative, effectsAdd, effectsRemove)
 				listOfActions = append(listOfActions, action)
@@ -119,21 +120,21 @@ func LoadActions(parcels []Parcel, trains []Train, destination []Destination, li
 //   PRECOND: In(p, t) ∧ At(t, d) ∧ Parcel(p) ∧ Train(t) ∧ Destination(d)
 //   EFFECT: At(p, d) ∧ ¬ In(p, t))
 
-func UnloadActions(parcels []Parcel, trains []Train, destination []Destination, listOfActions []Action) []Action {
+func UnloadActions(parcels []Parcel, trains []Train, destination []string, listOfActions []Action) []Action {
 	for _, d := range destination {
 		for _, p := range parcels {
 			for _, t := range trains {
-				argsPositive := [2]int{p.Id, t.Id}
-				argsPositive1 := [2]int{t.Id, d.Id}
-				argsAdd := [2]int{p.Id, d.Id}
-				argsRemove := [2]int{p.Id, t.Id}
+				argsPositive := [2]string{strconv.Itoa(p.Id), strconv.Itoa(t.Id)}
+				argsPositive1 := [2]string{strconv.Itoa(t.Id), d}
+				argsAdd := [2]string{strconv.Itoa(p.Id), d}
+				argsRemove := [2]string{strconv.Itoa(p.Id), strconv.Itoa(t.Id)}
 				effectsAdd := []State{NewState("at", argsAdd)}
 				effectsRemove := []State{NewState("in", argsRemove)}
 				preconditionsPositive := []State{NewState("in", argsPositive), NewState("train_at", argsPositive1)}
 				var preconditionsNegative []State
 
 				var operator = Unload
-				argsExpr := []int{p.Id, t.Id, d.Id}
+				argsExpr := []string{strconv.Itoa(p.Id), strconv.Itoa(t.Id), d}
 				var aex = NewActionExpression(operator, argsExpr)
 				action := NewAction(aex, preconditionsPositive, preconditionsNegative, effectsAdd, effectsRemove)
 				listOfActions = append(listOfActions, action)
@@ -143,24 +144,24 @@ func UnloadActions(parcels []Parcel, trains []Train, destination []Destination, 
 	return listOfActions
 }
 
-func TravelActions(trains []Train, destination []Destination, listOfActions []Action, db *sql.DB) []Action {
+func TravelActions(trains []Train, destination []string, listOfActions []Action, db *sql.DB) []Action {
 	for _, from := range destination {
 		for _, to := range destination {
 			if from!= to {
 				for _, t := range trains {
-					argsPositive := [2]int{t.Id, from.Id}
-					argsAdd := [2]int{t.Id, to.Id}
-					argsRemove := [2]int{t.Id, from.Id}
+					argsPositive := [2]string{strconv.Itoa(t.Id), from}
+					argsAdd := [2]string{strconv.Itoa(t.Id), to}
+					argsRemove := [2]string{strconv.Itoa(t.Id), from}
 					effectsAdd := []State{NewState("train_at", argsAdd)}
 					effectsRemove := []State{NewState("train_at", argsRemove)}
 					preconditionsPositive := []State{NewState("train_at", argsPositive)}
 					var preconditionsNegative []State
 
 					var operator = Travel
-					argsExpr := []int{t.Id, from.Id, to.Id}
+					argsExpr := []string{strconv.Itoa(t.Id), from, to}
 					var aex = NewActionExpression(operator, argsExpr)
 					action := NewAction(aex, preconditionsPositive, preconditionsNegative, effectsAdd, effectsRemove)
-					listOfActions = append(listOfActions, calculateCostOfAction(action, db))
+					listOfActions = append(listOfActions, calculateCostOfAction(action))
 				}
 			}
 		}
@@ -168,13 +169,13 @@ func TravelActions(trains []Train, destination []Destination, listOfActions []Ac
 	return listOfActions
 }
 
-func calculateCostOfAction(action Action, db *sql.DB) Action {
+func calculateCostOfAction(action Action) Action {
 	var cost float64
 	if action.expression.operator == Load || action.expression.operator == Unload{
 		cost = 0
 	}else{
-		var destinationFrom = getDestination(db, action.expression.arguments[1])
-		var destinationTo = getDestination(db, action.expression.arguments[2])
+		var destinationFrom = action.expression.arguments[1]
+		var destinationTo = action.expression.arguments[2]
 		cost = distanceBetweenCities(destinationFrom, destinationTo)
 	}
 	action.cost = cost

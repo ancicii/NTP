@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import permission_required, login_required
 import json
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from .forms import CreateUserForm, NewParcelForm, NewTrainForm, NewDestinationForm
+from .forms import CreateUserForm, NewParcelForm, NewTrainForm
 from django.contrib import messages
 from .decorators import unauthenticated_user, allowed_users
 from ctypes import *

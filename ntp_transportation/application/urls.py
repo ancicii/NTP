@@ -14,7 +14,6 @@ urlpatterns = [
 
     path('addParcel/', views.add_parcel, name="add-parcel"),
     path('addTrain/', views.add_train, name="add-train"),
-    path('addDestination/', views.add_destination, name="add-destination"),
-    path('sendParcels/', views.send_parcels, name="add-destination"),
+    path('sendParcels/', views.send_parcels, name="send-parcel"),
     path('doSearch/', views.call_go_search_function, name="do-search"),
 ]

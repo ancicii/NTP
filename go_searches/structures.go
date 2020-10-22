@@ -30,11 +30,11 @@ func (op Operator) String() string {
 // STATE
 type State struct {
 	name string
-	arguments [2]int
+	arguments [2]string
 
 }
 
-func NewState(name string, arguments [2]int) State{
+func NewState(name string, arguments [2]string) State{
 	s := State{name, arguments}
 	return s
 
@@ -44,11 +44,11 @@ func NewState(name string, arguments [2]int) State{
 //ex. load(p,t,d)
 type ActionExpression struct {
 	operator  Operator
-	arguments []int
+	arguments []string
 
 }
 
-func NewActionExpression(operator Operator, arguments []int) ActionExpression{
+func NewActionExpression(operator Operator, arguments []string) ActionExpression{
 	expr := ActionExpression{operator,arguments}
 	return expr
 
@@ -74,7 +74,7 @@ func NewAction(expression ActionExpression, preconditionsPos []State, preconditi
 //TRAIN
 type Train struct {
 	Id int
-	StartDestination int
+	StartDestination string
 	IsAvailable bool
 
 }
@@ -84,8 +84,8 @@ type Parcel struct {
 	Id int
 	Weight int
 	Price int
-	DestinationFrom int
-	DestinationTo int
+	DestinationFrom string
+	DestinationTo string
 	ReceiverId sql.NullInt64
 	SenderId sql.NullInt64
 	Date time.Time
@@ -94,7 +94,7 @@ type Parcel struct {
 }
 
 //DESTINATION
-type Destination struct {
+/*type Destination struct {
 	Id int
 	Name string
 	Country string
@@ -102,7 +102,7 @@ type Destination struct {
 	State sql.NullString
 	Longitude float64
 	Latitude float64
-}
+}*/
 
 //USER
 type User struct {

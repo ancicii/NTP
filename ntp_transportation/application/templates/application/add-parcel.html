@@ -80,5 +80,18 @@
   </div>
 </div>
 
+    <script>
+        function activatePlacesSearch(){
+            let options = {
+                types: ['(cities)']
+            };
+            let input = document.getElementById('start_dest');
+            let input1 = document.getElementById('end_dest');
+            let autocomplete = new google.maps.places.Autocomplete(input, options);
+            let autocomplete1 = new google.maps.places.Autocomplete(input1, options);
+        }
+
+    </script>
+
 
 {% endblock %}

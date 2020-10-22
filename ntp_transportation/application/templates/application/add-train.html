@@ -34,4 +34,16 @@
 </div>
 
 
+     <script>
+        function activatePlacesSearch(){
+            let options = {
+                types: ['(cities)']
+            };
+            let input = document.getElementById('start_dest');
+            let autocomplete = new google.maps.places.Autocomplete(input, options);
+        }
+
+    </script>
+
+
 {% endblock %}

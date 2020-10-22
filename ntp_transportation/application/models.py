@@ -79,22 +79,21 @@ class User(AbstractBaseUser):
         return True
 
 
-class Destination(models.Model):
-    name = models.CharField(max_length=200)
-    country = models.CharField(max_length=200)
-    zipcode = models.CharField(max_length=50)
-    state = models.CharField(max_length=200, null=True, blank=True)
-    longitude = models.DecimalField(max_digits=50, decimal_places=38)
-    latitude = models.DecimalField(max_digits=50, decimal_places=38)
-
-    def __str__(self):
-        return self.name + ', ' + self.country
+# class Destination(models.Model):
+#     name = models.CharField(max_length=200)
+#     country = models.CharField(max_length=200)
+#     zipcode = models.CharField(max_length=50)
+#     state = models.CharField(max_length=200, null=True, blank=True)
+#     longitude = models.FloatField()
+#     latitude = models.FloatField()
+#
+#     def __str__(self):
+#         return self.name + ', ' + self.country
 
 
 class Parcel(models.Model):
-    destination_from = models.ForeignKey(Destination, null=False, on_delete=models.CASCADE,
-                                         related_name='destination_from')
-    destination_to = models.ForeignKey(Destination, null=False, on_delete=models.CASCADE, related_name='destination_to')
+    destination_from = models.CharField(max_length=200)
+    destination_to = models.CharField(max_length=200)
     weight = models.FloatField(default=0, validators=[MinValueValidator(0)])
     price = models.FloatField(default=0, validators=[MinValueValidator(0)])
     sender = models.ForeignKey(User, null=True, on_delete=models.CASCADE, related_name='sender')
@@ -104,8 +103,7 @@ class Parcel(models.Model):
 
 
 class Train(models.Model):
-    start_destination = models.ForeignKey(Destination, null=True, on_delete=models.SET_NULL,
-                                          related_name='start_destination')
+    start_destination = models.CharField(max_length=200)
     isAvailable = models.BooleanField(default=True)
 
 #

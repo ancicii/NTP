@@ -15,9 +15,9 @@ func bool2int(b bool) int {
 }
 
 func containsState(s []State, e State) bool {
-	s1 := fmt.Sprintf("%s(%d,%d)", e.name, e.arguments[0], e.arguments[1])
+	s1 := fmt.Sprintf("%s(%s,%s)", e.name, e.arguments[0], e.arguments[1])
 	for _, a := range s {
-		s2 := fmt.Sprintf("%s(%d,%d)", a.name, a.arguments[0], a.arguments[1])
+		s2 := fmt.Sprintf("%s(%s,%s)", a.name, a.arguments[0], a.arguments[1])
 		if s1 == s2 {
 			return true
 		}
@@ -41,8 +41,8 @@ func removeState(list []State, toRemove State) []State{
 }
 
 func equalsState(e1 State, e2 State) bool{
-	s1 := fmt.Sprintf("%s(%d,%d)", e1.name, e1.arguments[0], e1.arguments[1])
-	s2 := fmt.Sprintf("%s(%d,%d)", e2.name, e2.arguments[0], e2.arguments[1])
+	s1 := fmt.Sprintf("%s(%s,%s)", e1.name, e1.arguments[0], e1.arguments[1])
+	s2 := fmt.Sprintf("%s(%s,%s)", e2.name, e2.arguments[0], e2.arguments[1])
 	if s1 == s2{
 		return true
 	}else{
@@ -51,9 +51,9 @@ func equalsState(e1 State, e2 State) bool{
 }
 
 
-func containsDestination(s []Destination, e Destination) bool {
+func containsDestination(s []string, e string) bool {
 	for _, a := range s {
-		if a.Id == e.Id {
+		if a == e {
 			return true
 		}
 	}
@@ -105,7 +105,7 @@ func createStateMap(state []State, stateMap *orderedmap.OrderedMap) *orderedmap.
 		stateMap.Set(el.Key, 0)
 	}
 	for _, state1 := range state{
-		s := fmt.Sprintf("%s(%d,%d)", state1.name, state1.arguments[0], state1.arguments[1])
+		s := fmt.Sprintf("%s(%s,%s)", state1.name, state1.arguments[0], state1.arguments[1])
 		stateMap.Set(s, 1)
 	}
 	return stateMap
@@ -115,18 +115,18 @@ func degreesToRadians(dg float64) float64{
 	return dg * math.Pi /180
 }
 
-func distanceBetweenCities(destination1 Destination, destination2 Destination) float64{
+func distanceBetweenCities(destination1 string, destination2 string) float64{
 	var earthRadiusKm float64 = 6378.1370
 
-	dLat := degreesToRadians(destination2.Latitude - destination1.Latitude)
-	dLon := degreesToRadians(destination2.Longitude - destination1.Longitude)
+	//dLat := degreesToRadians(destination2.Latitude - destination1.Latitude)
+	//dLon := degreesToRadians(destination2.Longitude - destination1.Longitude)
+	//
+	//lat1 := degreesToRadians(destination1.Latitude)
+	//lat2 := degreesToRadians(destination2.Latitude)
 
-	lat1 := degreesToRadians(destination1.Latitude)
-	lat2 := degreesToRadians(destination2.Latitude)
-
-	a := math.Pow(math.Sin(dLat/2), 2) + math.Pow(math.Sin(dLon/2), 2) * math.Cos(lat1) * math.Cos(lat2)
-	c := 2 * math.Atan2(math.Sqrt(a), math.Sqrt(1-a)) * earthRadiusKm
-	return c
+	//a := math.Pow(math.Sin(dLat/2), 2) + math.Pow(math.Sin(dLon/2), 2) * math.Cos(lat1) * math.Cos(lat2)
+	//c := 2 * math.Atan2(math.Sqrt(a), math.Sqrt(1-a)) * earthRadiusKm
+	return earthRadiusKm
 
 
 }

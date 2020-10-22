@@ -1,7 +1,7 @@
 from django.forms import ModelForm
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django import forms
-from .models import User, Parcel, Train, Destination
+from .models import User, Parcel, Train
 
 
 class CreateUserForm(UserCreationForm):
@@ -34,23 +34,8 @@ class NewParcelForm(forms.ModelForm):
         model = Parcel
         fields = ['destination_from', 'destination_to', 'weight', 'price']
         widgets = {
-            'destination_from': forms.Select(attrs={'class': 'custom-select'}),
-            'destination_to': forms.Select(attrs={'class': 'custom-select'}),
-        }
-
-
-class NewDestinationForm(forms.ModelForm):
-    zipcode = forms.IntegerField(widget=forms.TextInput(attrs={'class': 'input--style-4'}))
-    latitude = forms.FloatField(widget=forms.TextInput(attrs={'class': 'input--style-4'}))
-    longitude = forms.FloatField(widget=forms.TextInput(attrs={'class': 'input--style-4'}))
-
-    class Meta:
-        model = Destination
-        fields = ['name', 'country', 'zipcode', 'state', 'longitude', 'latitude']
-        widgets = {
-            'name': forms.TextInput(attrs={'class': 'input--style-4'}),
-            'country': forms.TextInput(attrs={'class': 'input--style-4'}),
-            'state': forms.TextInput(attrs={'class': 'input--style-4'}),
+            'destination_from': forms.TextInput(attrs={'class': 'custom-select', 'id': 'start_dest'}),
+            'destination_to': forms.TextInput(attrs={'class': 'custom-select', 'id': 'end_dest'}),
         }
 
 
@@ -59,5 +44,5 @@ class NewTrainForm(forms.ModelForm):
         model = Train
         fields = ['start_destination']
         widgets = {
-            'start_destination': forms.Select(attrs={'class': 'custom-select'})
+            'start_destination': forms.TextInput(attrs={'class': 'input--style-4', 'id': 'start_dest'})
         }
