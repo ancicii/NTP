@@ -23,28 +23,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dc71378a-eb85-44a7-b60f-cdb2026d7f17" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/go_searches.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../ntp_transportation/application/migrations/0013_auto_20201021_2225.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../ntp_transportation/application/migrations/0014_auto_20201021_2247.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../ntp_transportation/application/migrations/0015_delete_destination.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.idea/NTP.iml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/NTP.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.idea/jsLibraryMappings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/jsLibraryMappings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.so" beforeDir="false" afterPath="$PROJECT_DIR$/main.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/problem.go" beforeDir="false" afterPath="$PROJECT_DIR$/problem.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/structures.go" beforeDir="false" afterPath="$PROJECT_DIR$/structures.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils.go" beforeDir="false" afterPath="$PROJECT_DIR$/utils.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../ntp_transportation/application/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/../ntp_transportation/application/admin.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../ntp_transportation/application/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/../ntp_transportation/application/forms.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../ntp_transportation/application/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/../ntp_transportation/application/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../ntp_transportation/application/templates/application/add-parcel.html" beforeDir="false" afterPath="$PROJECT_DIR$/../ntp_transportation/application/templates/application/add-parcel.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../ntp_transportation/application/templates/application/add-train.html" beforeDir="false" afterPath="$PROJECT_DIR$/../ntp_transportation/application/templates/application/add-train.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../ntp_transportation/config.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../ntp_transportation/application/templates/application/main.html" beforeDir="false" afterPath="$PROJECT_DIR$/../ntp_transportation/application/templates/application/main.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../ntp_transportation/application/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/../ntp_transportation/application/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../ntp_transportation/results.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../ntp_transportation/results.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
