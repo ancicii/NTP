@@ -27,6 +27,26 @@ func (op Operator) String() string {
 	return names[op]
 }
 
+type googleApiResponse struct {
+	Results Results `json:"results"`
+}
+
+type Results []Geometry
+
+type Geometry struct {
+	Geometry Location `json:"geometry"`
+}
+
+type Location struct {
+	Location Coordinates `json:"location"`
+}
+
+type Coordinates struct {
+	Latitude float64  `json:"lat"`
+	Longitude float64  `json:"lng"`
+}
+
+
 // STATE
 type State struct {
 	name string
@@ -62,11 +82,12 @@ type Action struct {
 	effectsAdd            []State
 	effectsRemove         []State
 	cost				  float64
+	heuristicCost		  float64
 
 }
 
 func NewAction(expression ActionExpression, preconditionsPos []State, preconditionsNeg []State, effectsAdd []State, effectsRemove []State) Action{
-	action := Action{expression, preconditionsPos, preconditionsNeg, effectsAdd, effectsRemove, 0}
+	action := Action{expression, preconditionsPos, preconditionsNeg, effectsAdd, effectsRemove, 0,0}
 	return action
 }
 
@@ -83,26 +104,18 @@ type Train struct {
 type Parcel struct {
 	Id int
 	Weight int
-	Price int
+	Price float64
 	DestinationFrom string
 	DestinationTo string
 	ReceiverId sql.NullInt64
 	SenderId sql.NullInt64
-	Date time.Time
+	DateCreated time.Time
+	DateSent sql.NullTime
 	IsDelivered bool
+	IsSent bool
 
 }
 
-//DESTINATION
-/*type Destination struct {
-	Id int
-	Name string
-	Country string
-	Zipcode string
-	State sql.NullString
-	Longitude float64
-	Latitude float64
-}*/
 
 //USER
 type User struct {
@@ -137,7 +150,9 @@ func NewChildNode(state []State, parent *Node, actionEx ActionExpression) *Node{
 
 func NewChildNodeCost(state []State, parent *Node, action Action) *Node{
 	cost := parent.Cost + action.cost
-	node := &Node{state, parent, action.expression, cost, parent.Depth+1, 0 , 0, 0}
+	h := parent.h + action.heuristicCost
+	f := cost + h
+	node := &Node{state, parent, action.expression, cost, parent.Depth+1, 0 , h, f}
 	return node
 }
 

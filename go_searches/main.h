@@ -22,8 +22,20 @@ typedef struct { const char *p; ptrdiff_t n; } _GoString_;
 #line 4 "main.go"
 
 		typedef struct action{
-		char* actionStrings[800];
+			char* actionStrings[800];
 		}action;
+
+		typedef struct destinationC{
+			char name;
+			double longitude;
+			double latitude;
+		}destinationC;
+
+		typedef struct parcelC{
+			int id;
+			destinationC destinationFrom;
+			destinationC destinationTo;
+		}parcelC;
 
 	
 #line 1 "cgo-generated-wrapper"

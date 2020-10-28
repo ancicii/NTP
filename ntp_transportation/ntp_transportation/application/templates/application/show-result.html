@@ -1,0 +1,255 @@
+{% extends 'application/main.html' %}
+
+{% block content %}
+    <div class="page-wrapper bg-gra-01 p-t-90 font-poppins">
+        <div class="wrapper wrapper--w680">
+            <div class="card card-4">
+                <div class="card-body">
+                    <h2 class="title">Results</h2>
+                    <div id="map" style="width:100%;height:400px;">
+
+
+                    </div>
+                    <div style="font-family: 'Trebuchet MS', Helvetica, sans-serif; margin-top: 20px">
+                        {% for action in actions %}
+                            <p class="action">{{ action }}</p>
+                        {% endfor %}
+
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let directionsDisplay = new Map();
+        let directionsService;
+        let places = new Map();
+        {#let routes = new Map();#}
+        let placesNames = new Map();
+        let placesNamesList = new Map();
+        let map;
+        let routeNo = 0;
+        let numberOfRoutes = 0;
+        let renderArray = new Map();
+        let colourArray = ['#d4614e', '#4e7bd4', '#ebf149', '#32c32f', '#53dbc2', '#9f56ee', '#d069b9', '#f36c25'];
+        let pointerColor = ['red-dot.png', 'blue-dot.png', 'yellow-dot.png', 'green-dot.png', 'ltblue-dot.png',
+                            'purple-dot.png', 'pink-dot.png', 'orange-dot.png']
+        let numberOfPlaces = 0;
+
+        function fillPlaces() {
+            let no;
+            let end = 0;
+            {% for route in all_routes %}
+                numberOfRoutes++
+                placesNamesList = new Map();
+                no = 0;
+                {% for destination in route.destinations %}
+                    numberOfPlaces++;
+                    placesNamesList.set(no, "{{ destination }}")
+                    no++
+                    {% if forloop.last %}
+                        end++
+                        placesNames.set({{ route.train.id }}, placesNamesList)
+                    {% endif  %}
+                {% endfor  %}
+            {% endfor %}
+            if (numberOfRoutes === end) {
+                placesToLL()
+            }
+        }
+
+        let breakNo = 0;
+
+        function placesToLL() {
+            placesNames.forEach(function (value, key) {
+                for (let j = 0; j < value.size; j++) {
+                    codeAddress(value.get(j), function (search_latlng) {
+                        let gg = value.get(j)
+                        let places1 = new Map();
+                        places1.set(j, search_latlng);
+                        if (!places.has(key)) {
+                            places.set(key, [])
+                        }
+                        places.get(key).push(places1)
+                        if (places.get(key).length === value.size && breakNo < numberOfRoutes) {
+                            breakNo++
+                        }
+                        if (breakNo === numberOfRoutes) {
+                            breakNo++
+                            console.log(places)
+                            initializeMap()
+                        }
+                    });
+
+                }
+            })
+
+        }
+
+        let dirSer = 0;
+
+        function drawRouteMap() {
+            directionsService = new google.maps.DirectionsService();
+
+            let counter = 0;
+            let reqCounter = 0;
+            let renderCounter = 0;
+
+            function submitRequest() {
+                directionsService.route((requestArray.get(counter))[reqCounter], directionResults);
+            }
+
+            function directionResults(result, status) {
+                if (status === google.maps.DirectionsStatus.OK) {
+
+                    renderArray.set(renderCounter, new google.maps.DirectionsRenderer());
+                    renderArray.get(renderCounter).setMap(map);
+                    var image = 'http://maps.google.com/mapfiles/ms/micons/' + pointerColor[counter]
+                    console.log(result)
+                    renderArray.get(renderCounter).setOptions({
+                        preserveViewport: true,
+                        suppressInfoWindows: true,
+                        polylineOptions: {
+                            strokeWeight: 4.4,
+                            strokeOpacity: 0.8,
+                            strokeColor: colourArray[counter]
+                        },
+                        markerOptions: {
+                            animation: google.maps.Animation.DROP,
+                            icon: image
+                        }
+                    });
+                    renderArray.get(renderCounter).setDirections(result);
+                    nextRequest();
+                }
+            }
+
+            function nextRequest() {
+                reqCounter++;
+                renderCounter++;
+                if (reqCounter >= requestArray.get(counter).length) {
+                    counter++;
+                    reqCounter = 0;
+                }
+                if (counter >= requestArray.size) {
+                    return;
+                }
+                submitRequest();
+            }
+
+            submitRequest();
+        }
+
+        function codeAddress(address, callback) {
+            const geocoder = new google.maps.Geocoder();
+            geocoder.geocode({'address': address}, function (results, status) {
+                if (status === google.maps.GeocoderStatus.OK) {
+                    callback(results[0].geometry.location)
+                } else {
+                    alert("Geocode unsuccessful");
+                }
+            });
+        }
+
+        let requestArray = new Map();
+
+        function initializeMap() {
+            let i = 0;
+            let countNext = 0
+            let bounds = new google.maps.LatLngBounds();
+            let placesLL1 = [];
+            let placesLL = [];
+            places.forEach(function (placesValue, keyPlaces) {
+                countNext++;
+                placesValue.forEach(function (value, key) {
+                    value.forEach(function (value1, key1) {
+                        placesLL1.push(value1);
+                    })
+
+                })
+                for (let i = 0; i < placesLL1.length; i++) {
+                    placesLL.push(placesLL1[i]);
+                    bounds.extend(placesLL[placesLL.length - 1]);
+                }
+
+
+                let tmp_requests = [];
+                let newMap = new Map();
+                console.log(placesValue)
+                placesValue.forEach(function (value, key) {
+                    value.forEach(function (val, k) {
+                        newMap.set(k, val)
+                    })
+                    if (newMap.size === placesValue.length) {
+                        for (let j = 0; j < newMap.size - 1; j++) {
+                            console.log(newMap.get(j))
+                            console.log(newMap.get(j + 1))
+                            const request = {
+                                origin: newMap.get(j),
+                                destination: newMap.get(j + 1),
+                                travelMode: google.maps.TravelMode.DRIVING
+                            };
+                            tmp_requests.push(request);
+                        }
+                    }
+                })
+
+                requestArray.set(i, tmp_requests)
+                i++;
+            })
+            if (countNext === places.size) {
+                map.fitBounds(bounds);
+                google.maps.event.addDomListener(window, 'resize', function () {
+                    google.maps.event.trigger(map, 'resize');
+                    map.fitBounds(bounds);
+                });
+                drawRouteMap()
+            }
+        }
+
+        function myMap() {
+
+
+            let mapOptions = {
+                center: new google.maps.LatLng(51.508742, -0.120850),
+                zoom: 5,
+            };
+            map = new google.maps.Map(document.getElementById("map"), mapOptions);
+            fillPlaces();
+
+        }
+
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAIJCoIXnAfnAIM-XYrTnmzr8ya5pPehdQ&callback=myMap"></script>
+    <style>
+        @keyframes animated-border {
+            0% {
+                box-shadow: 0 0 0 0 rgb(191, 88, 214);
+            }
+            100% {
+                box-shadow: 0 0 0 20px rgba(22, 3, 3, 0);
+            }
+        }
+
+        #map {
+            animation: animated-border 1.5s infinite;
+            font-family: Arial;
+            font-size: 18px;
+            line-height: 30px;
+            font-weight: bold;
+            color: white;
+            border: 2px solid;
+            border-radius: 10px;
+            padding: 15px;
+        }
+
+        .container {
+            background-color: #a58ed2
+        }
+    </style>
+
+
+{% endblock %}

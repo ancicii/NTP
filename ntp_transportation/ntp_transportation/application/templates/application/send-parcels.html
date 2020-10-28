@@ -1,0 +1,134 @@
+{% extends 'application/main.html' %}
+
+{% block content %}
+
+    <div class="page-wrapper bg-gra-01 p-t-90 font-poppins">
+        <div class="wrapper wrapper--w1500">
+            <div class="card1 card-4">
+                <div class="card-body1">
+                    <h2 class="title">Send Parcels</h2>
+
+                    <table id="example" class="table table-striped table-bordered" style="width:100%">
+                        <thead>
+                        <tr>
+                            <th>Destination From</th>
+                            <th>Destination To</th>
+                            <th>Date Created</th>
+                            {#                            <th>Weight</th>#}
+                            {#                            <th>Price</th>#}
+                            {#                            <th>Sender</th>#}
+                            {#                            <th>Receiver</th>#}
+                            <th>Select</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for o in obj %}
+                            <tr>
+                                <td>{{ o.destination_from }}</td>
+                                <td>{{ o.destination_to }}</td>
+                                <td>{{ o.dateCreated }}</td>
+
+
+                                {#                                <td>{{ o.weight }}</td>#}
+                                {#                                <td>{{ o.price }}</td>#}
+                                {#                                <td>{{ o.sender }}</td>#}
+                                {#                                <td>{{ o.receiver }}</td>#}
+                                <td>
+                                    <div class="checkbox checkbox-primary">
+                                        <input type="checkbox" class="checkbox-row" name="selectedForSearch"
+                                               id="{{ o.id }}" value="{{ o.id }}">
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">
+                                    <p style="font-family:'Georgia'; margin-top: -10px"> Weight: {{ o.weight }}</p>
+                                    <p style="font-family:'Georgia'; margin-top: -15px"> Price: {{ o.price }}</p>
+                                    <p style="font-family:'Georgia'; margin-top: -15px"> Sender: {{ o.sender }}</p>
+                                    <p style="font-family:'Georgia'; margin-top: -15px; margin-bottom: -10px">
+                                        Receiver: {{ o.receiver }}</p>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+
+                    </table>
+                    <div class="row d-flex justify-content-center">
+
+                        <div class="col-3">
+                            <div>
+                                <select name="search-type" class="custom-select" id="search-type" required>
+                                    <option value="" selected=""> Select type of search</option>
+                                    <option value="BFS">Breadth First Search</option>
+                                    <option value="DFS">Depth First Search</option>
+                                    <option value="UCS">Uniform Cost Search</option>
+                                    <option value="A*H1">A* Search with Heuristic 1 (Sum of non achieved goal states)
+                                    </option>
+                                    <option value="A*H2">A* Search with Heuristic 2 (Sum of distances from parcels
+                                        current city to goal city)
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-1">
+                            <button class="btn btn--radius-2 btn--blue" id="doSearchBtn" type="submit">Submit</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script>
+        $
+        $(function () {
+            $("td[colspan=3]").hide();
+            $("table").click(function (event) {
+                event.stopPropagation();
+                var $target = $(event.target);
+                if (!$target.hasClass('checkbox-row')) {
+                    if ($target.closest("td").attr("colspan") > 1) {
+                        $target.slideUp();
+                    } else {
+                        $target.closest("tr").next().find("td").slideToggle();
+                    }
+                }
+
+            });
+        });
+
+        $("#doSearchBtn").click(function () {
+            var selectedParcels = new Array();
+            var searchType = $("#search-type").val();
+            $('input[name="selectedForSearch"]:checked').each(function () {
+                selectedParcels.push(this.value)
+            });
+            var newParcels = selectedParcels.join(',')
+            $.ajax({
+                url: '/doSearch/',
+                data: {
+                    'parcels': newParcels,
+                    'searchType': searchType
+                },
+                dataType: 'json',
+                success: function (data) {
+                    alert(data.message)
+                    params = JSON.stringify(data.result);
+                    window.location.href = '/showResult';
+                },
+                error: function (e) {
+                    console.log("error")
+                }
+            })
+        });
+    </script>
+
+    <style>
+        .container {
+            background-color: #a58ed2
+        }
+    </style>
+
+
+{% endblock content %}

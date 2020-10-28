@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/elliotchance/orderedmap"
 	"strconv"
+	"strings"
 )
 
 type Problem struct {
@@ -42,8 +43,6 @@ func (p Problem) possibleActions(states []State) []Action{
 }
 
 func (p Problem) checkGoal(stateMap *orderedmap.OrderedMap) bool {
-	for el := stateMap.Front(); el != nil; el = el.Next() {}
-
 	for _, state1 := range p.goalState{
 		s := fmt.Sprintf("%s(%s,%s)", state1.name, state1.arguments[0], state1.arguments[1])
 		value, ok := stateMap.Get(s)
@@ -57,6 +56,64 @@ func (p Problem) checkGoal(stateMap *orderedmap.OrderedMap) bool {
 	}
 	return true
 }
+
+//heuristic 1 racuna koliko ciljnih stanja nije ispunjeno
+func (p Problem) calculateH1(stateMap *orderedmap.OrderedMap) float64 {
+	var h float64= 0
+	for _, state1 := range p.goalState{
+		s := fmt.Sprintf("%s(%s,%s)", state1.name, state1.arguments[0], state1.arguments[1])
+		value, ok := stateMap.Get(s)
+		if ok {
+			if value != 1{
+				h += 1
+			}
+		}
+	}
+	return h
+}
+
+
+func (p Problem) calculateH2(stateMap *orderedmap.OrderedMap) float64 {
+
+	var h float64= 0
+	for _, state1 := range p.goalState{
+		for el := stateMap.Front(); el != nil; el = el.Next() {
+			if el.Value == 1{
+				str := fmt.Sprintf("%s", el.Key)
+				if strings.HasPrefix(str, "at"){
+					parcelId := strings.Split(strings.Split(str,",")[0], "(")[1]
+					parcelCurrentDestination := strings.TrimSuffix(strings.Split(str,",")[1]+ ", "+ strings.Split(str,",")[2], ")")
+					if parcelId == state1.arguments[0] && parcelCurrentDestination!= state1.arguments[1] {
+						h += distanceBetweenCitiesByRail(parcelCurrentDestination, state1.arguments[1])
+					}
+				} else if strings.HasPrefix(str, "in"){
+					parcelId := strings.Split(strings.Split(str,",")[0], "(")[1]
+					parcelCurrentTrain := getTrainsDestination(stateMap, strings.TrimSuffix(strings.Split(str,",")[1], ")"))
+					if parcelId == state1.arguments[0] && parcelCurrentTrain!= state1.arguments[1] {
+						h += distanceBetweenCitiesByRail(parcelCurrentTrain, state1.arguments[1])
+					}
+				}
+			}
+		}
+	}
+	return h
+}
+
+func getTrainsDestination(stateMap *orderedmap.OrderedMap, train string) string {
+	for el := stateMap.Front(); el != nil; el = el.Next() {
+		if el.Value == 1 {
+			str := fmt.Sprintf("%s", el.Key)
+			prefix := "train_at(" + train
+			if strings.HasPrefix(str, prefix) {
+				trainCurrentDestination := strings.TrimSuffix(strings.Split(str, ",")[1] + ", " + strings.Split(str, ",")[2], ")")
+				return trainCurrentDestination
+			}
+		}
+
+	}
+	return ""
+}
+
 
 func (p Problem) possibleNodes(state []State, node *Node) []*Node {
 	actions := p.possibleActions(state)
@@ -89,10 +146,10 @@ func AddActions(parcels []Parcel, trains []Train, destination []string, listOfAc
 	listOfActions3 := TravelActions(trains, destination, listOfActions2, db)
 	return listOfActions3
 }
-//   Action(Load(p, t, d),
-//   PRECOND: At(p, d) ∧ At(t, d) ∧ Parcel(p) ∧ Train(t) ∧ Destination(d)
-//   EFFECT: ¬ At(p, d) ∧ In(p, t))
 
+//   Action(Load(p, t, d),
+//   PRECOND: At(p, d) ∧ Train_at(t, d) ∧ Parcel(p) ∧ Train(t) ∧ Destination(d)
+//   EFFECT: ¬ At(p, d) ∧ In(p, t))
 func LoadActions(parcels []Parcel, trains []Train, destination []string, listOfActions []Action) []Action {
 	for _, d := range destination {
 		for _, p := range parcels {
@@ -116,10 +173,10 @@ func LoadActions(parcels []Parcel, trains []Train, destination []string, listOfA
 	}
 	return listOfActions
 }
-//   Action(Unload(p, t, d),
-//   PRECOND: In(p, t) ∧ At(t, d) ∧ Parcel(p) ∧ Train(t) ∧ Destination(d)
-//   EFFECT: At(p, d) ∧ ¬ In(p, t))
 
+//   Action(Unload(p, t, d),
+//   PRECOND: In(p, t) ∧ Train_at(t, d) ∧ Parcel(p) ∧ Train(t) ∧ Destination(d)
+//   EFFECT: At(p, d) ∧ ¬ In(p, t))
 func UnloadActions(parcels []Parcel, trains []Train, destination []string, listOfActions []Action) []Action {
 	for _, d := range destination {
 		for _, p := range parcels {
@@ -144,6 +201,9 @@ func UnloadActions(parcels []Parcel, trains []Train, destination []string, listO
 	return listOfActions
 }
 
+//   Action(Travel(t, d1, d2),
+//   PRECOND: Train_at(t, d1) ∧ Train(t) ∧ Destination(d1) ∧ Destination(d2)
+//   EFFECT: Train_at(t, d2) ∧ ¬ Train_at(t, d1)
 func TravelActions(trains []Train, destination []string, listOfActions []Action, db *sql.DB) []Action {
 	for _, from := range destination {
 		for _, to := range destination {
@@ -176,7 +236,7 @@ func calculateCostOfAction(action Action) Action {
 	}else{
 		var destinationFrom = action.expression.arguments[1]
 		var destinationTo = action.expression.arguments[2]
-		cost = distanceBetweenCities(destinationFrom, destinationTo)
+		cost = distanceBetweenCitiesByRail(destinationFrom, destinationTo)
 	}
 	action.cost = cost
 	return action

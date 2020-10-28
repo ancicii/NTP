@@ -102,6 +102,7 @@ func UniformCostSearch(problem Problem, stateMap *orderedmap.OrderedMap) *Node{
 			for _, add := range action.effectsAdd{
 				state1 = append(state1, add)
 			}
+			action.heuristicCost = 0
 			child := NewChildNodeCost(state1, leaf, action)
 
 			childToString := stateTo10(createStateMap(child.NodeState, stateMap))
@@ -115,3 +116,59 @@ func UniformCostSearch(problem Problem, stateMap *orderedmap.OrderedMap) *Node{
 
 	return nil
 }
+
+
+func AStarSearch(problem Problem, stateMap *orderedmap.OrderedMap, heuristic string) *Node{
+	state := problem.initialState
+	node := NewNode(state)
+
+	priorityQueue := &PriorityQueue{}
+	heap.Init(priorityQueue)
+	heap.Push(priorityQueue, node)
+
+	var list []string		//lista cvorova iz queue-a u string reprezentaciji 1/0
+	var explored []string	//lista pretrazenih cvorova
+
+	list = append(list, stateTo10(createStateMap(state, stateMap)))
+
+	for {
+		if priorityQueue.Len() == 0 {
+			break // no solution
+		}
+
+		leaf := heap.Pop(priorityQueue).(*Node)
+		stateMap = createStateMap(leaf.NodeState, stateMap)
+		if problem.checkGoal(stateMap) {
+			return leaf
+		}
+		explored = append(explored, stateTo10(stateMap))
+
+		for _, action := range problem.possibleActions(leaf.NodeState) {
+			state1 := make([]State, len(leaf.NodeState))
+			copy(state1, leaf.NodeState)
+			for _, remove := range action.effectsRemove {
+				state1 = removeState(state1, remove)
+			}
+			for _, add := range action.effectsAdd{
+				state1 = append(state1, add)
+			}
+			if heuristic=="H1" {
+				action.heuristicCost = problem.calculateH1(stateMap)
+			}else{
+				action.heuristicCost = problem.calculateH2(stateMap)
+			}
+
+			child := NewChildNodeCost(state1, leaf, action)
+
+			childToString := stateTo10(createStateMap(child.NodeState, stateMap))
+			if (!isInExplored(explored, childToString)) && (!containsNode(list, childToString)){
+				heap.Push(priorityQueue, child)
+				list = append(list, childToString)
+			}
+		}
+
+	}
+
+	return nil
+}
+

@@ -2,10 +2,19 @@ package main
 //import "C"
 
 import (
+	"context"
+	"encoding/json"
 	"fmt"
 	"github.com/elliotchance/orderedmap"
+	"googlemaps.github.io/maps"
+	"io/ioutil"
+	"log"
 	"math"
+	"net/http"
+	"strings"
 )
+
+const googleApiUri = "https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyAIJCoIXnAfnAIM-XYrTnmzr8ya5pPehdQ&address="
 
 func bool2int(b bool) int {
 	if b {
@@ -115,20 +124,83 @@ func degreesToRadians(dg float64) float64{
 	return dg * math.Pi /180
 }
 
-func distanceBetweenCities(destination1 string, destination2 string) float64{
+func distanceBetweenCities(destination1 string, destination2 string) float64 {
 	var earthRadiusKm float64 = 6378.1370
 
-	//dLat := degreesToRadians(destination2.Latitude - destination1.Latitude)
-	//dLon := degreesToRadians(destination2.Longitude - destination1.Longitude)
-	//
-	//lat1 := degreesToRadians(destination1.Latitude)
-	//lat2 := degreesToRadians(destination2.Latitude)
+	resp, err := http.Get(googleApiUri + strings.Replace(destination1, " ", "", -1))
+	resp1, err1 := http.Get(googleApiUri + strings.Replace(destination2, " ", "", -1))
 
-	//a := math.Pow(math.Sin(dLat/2), 2) + math.Pow(math.Sin(dLon/2), 2) * math.Cos(lat1) * math.Cos(lat2)
-	//c := 2 * math.Atan2(math.Sqrt(a), math.Sqrt(1-a)) * earthRadiusKm
-	return earthRadiusKm
+	if err != nil || err1 != nil{
+		log.Fatal("Fetching google api uri data error: ", err)
+	}
 
+	bytes, err := ioutil.ReadAll(resp.Body)
+	bytes1, err1 := ioutil.ReadAll(resp1.Body)
+	defer resp.Body.Close()
+	defer resp1.Body.Close()
+	if err != nil || err1 != nil{
+		log.Fatal("Reading google api data error: ", err)
+	}
+
+	var data googleApiResponse
+	var data1 googleApiResponse
+	json.Unmarshal(bytes, &data)
+	json.Unmarshal(bytes1, &data1)
+
+	dLat := degreesToRadians(data1.Results[0].Geometry.Location.Latitude - data.Results[0].Geometry.Location.Latitude)
+	dLon := degreesToRadians(data1.Results[0].Geometry.Location.Longitude - data.Results[0].Geometry.Location.Longitude)
+
+	lat1 := degreesToRadians(data.Results[0].Geometry.Location.Latitude)
+	lat2 := degreesToRadians(data1.Results[0].Geometry.Location.Latitude)
+
+	a := math.Pow(math.Sin(dLat/2), 2) + math.Pow(math.Sin(dLon/2), 2) * math.Cos(lat1) * math.Cos(lat2)
+	c := 2 * math.Atan2(math.Sqrt(a), math.Sqrt(1-a)) * earthRadiusKm
+	return c
+}
+
+
+func distanceBetweenCitiesByRail(destination1 string, destination2 string) float64{
+	c, err := maps.NewClient(maps.WithAPIKey("AIzaSyAIJCoIXnAfnAIM-XYrTnmzr8ya5pPehdQ"))
+	if err != nil {
+		log.Fatalf("fatal error: %s", err)
+	}
+	r := &maps.DistanceMatrixRequest{
+		Origins:      []string{destination1},
+		Destinations: []string{destination2},
+		Units:        maps.UnitsMetric,
+		Mode: maps.TravelModeTransit,
+		TransitMode: []maps.TransitMode{maps.TransitModeTrain},
+	}
+	route, err := c.DistanceMatrix(context.Background(), r)
+
+	if err != nil {
+		log.Fatalf("fatal error: %s", err)
+	}
+	var result float64 = 0
+	result = float64(route.Rows[0].Elements[0].Distance.Meters)*0.001
+
+	if result == 0 {
+		r := &maps.DistanceMatrixRequest{
+			Origins:      []string{destination1},
+			Destinations: []string{destination2},
+			Units:        maps.UnitsMetric,
+			Mode: maps.TravelModeDriving,
+		}
+		route, err := c.DistanceMatrix(context.Background(), r)
+
+		if err != nil {
+			log.Fatalf("fatal error: %s", err)
+		}
+		result = float64(route.Rows[0].Elements[0].Distance.Meters)*0.001
+	}
+	return result
 
 }
+
+
+
+
+
+
 
 

@@ -3,8 +3,20 @@ import (
 
 	/*
 		typedef struct action{
-		char* actionStrings[800];
+			char* actionStrings[800];
 		}action;
+
+		typedef struct destinationC{
+			char name;
+			double longitude;
+			double latitude;
+		}destinationC;
+
+		typedef struct parcelC{
+			int id;
+			destinationC destinationFrom;
+			destinationC destinationTo;
+		}parcelC;
 
 	*/
 	"C"
@@ -15,7 +27,9 @@ import (
 	"fmt"
 	"github.com/elliotchance/orderedmap"
 	_ "github.com/go-sql-driver/mysql"
+	"log"
 	"strconv"
+	"time"
 )
 
 func createProblem(parcels []int) Problem{
@@ -52,7 +66,7 @@ func createProblem(parcels []int) Problem{
 		for parcel1.Next(){
 			var p Parcel
 			err = parcel1.Scan(&p.Id, &p.Weight, &p.Price, &p.DestinationFrom, &p.DestinationTo,
-				&p.ReceiverId, &p.SenderId, &p.Date, &p.IsDelivered)
+				&p.ReceiverId, &p.SenderId, &p.DateCreated, &p.IsDelivered, &p.DateSent, &p.IsSent)
 			if err != nil {
 				panic(err.Error())
 			}
@@ -77,22 +91,6 @@ func createProblem(parcels []int) Problem{
 	return problem
 
 }
-
-/*func getDestination(db *sql.DB, id int) Destination{
-	sqlRaw := fmt.Sprintf(`SELECT * FROM application_destination WHERE id IN ('%d')`, id)
-	destinations, err := db.Query(sqlRaw)
-	if err != nil {
-		panic(err.Error())
-	}
-	var d Destination
-	for destinations.Next(){
-		err = destinations.Scan(&d.Id, &d.Name, &d.Country, &d.Zipcode, &d.State, &d.Longitude, &d.Latitude)
-		if err != nil {
-			panic(err.Error())
-		}
-	}
-	return d
-}*/
 
 func getTrains(db *sql.DB) []Train{
 	sqlRaw := fmt.Sprintf(`SELECT * FROM application_train WHERE isAvailable`)
@@ -171,30 +169,65 @@ func doSearches(pcs []int, kindOfSearch string) C.action{
 	var actionsReturn C.action
 
 	if kindOfSearch == "BFS"{
+		start := time.Now()
 		fmt.Println("Starting Breadth First Search...")
 		n := BreadthFirstSearch(problem, stateMap)
 		fmt.Println(getActions(n))
 		fmt.Println("End of Breadth First Search...")
+		elapsed := time.Since(start)
+		log.Printf("Time elapsed: %s", elapsed)
 		allActions := getActions(n)
 		for i, act := range  allActions{
 			actionsReturn.actionStrings[i] = C.CString(act)
 
 		}
 	}else if kindOfSearch == "DFS"{
+		start := time.Now()
 		fmt.Println("Starting Depth First Search...")
 		n := DepthFirstSearch(NewNode(problem.initialState), problem, stateMap, []string{}, []string{})
 		fmt.Println(getActions(n))
 		fmt.Println("End of Depth First Search...")
+		elapsed := time.Since(start)
+		log.Printf("Time elapsed: %s", elapsed)
 		allActions := getActions(n)
 		for i, act := range  allActions{
 			actionsReturn.actionStrings[i] = C.CString(act)
 
 		}
-	}else{
+	}else if kindOfSearch == "UCS"{
+		start := time.Now()
 		fmt.Println("Starting Uniform Cost First Search...")
 		n := UniformCostSearch(problem, stateMap)
 		fmt.Println(getActions(n))
 		fmt.Println("End of Uniform Cost Search...")
+		elapsed := time.Since(start)
+		log.Printf("Time elapsed: %s", elapsed)
+		allActions := getActions(n)
+		for i, act := range  allActions{
+			actionsReturn.actionStrings[i] = C.CString(act)
+
+		}
+	}else if kindOfSearch == "A*H1"{
+		start := time.Now()
+		fmt.Println("Starting A* Search with Heuristic 1 (Sum of non achieved goal states)...")
+		n := AStarSearch(problem, stateMap, "H1")
+		fmt.Println(getActions(n))
+		fmt.Println("End of A* Search with Heuristic 1 (Sum of non achieved goal states)...")
+		elapsed := time.Since(start)
+		log.Printf("Time elapsed: %s", elapsed)
+		allActions := getActions(n)
+		for i, act := range  allActions{
+			actionsReturn.actionStrings[i] = C.CString(act)
+
+		}
+	}else {
+		start := time.Now()
+		fmt.Println("Starting A* Search with Heuristic 2 (Sum of distances from parcels current city to goal city)...")
+		n := AStarSearch(problem, stateMap, "H2")
+		fmt.Println(getActions(n))
+		fmt.Println("End of A* Search with Heuristic 2 (Sum of distances from parcels current city to goal city)...")
+		elapsed := time.Since(start)
+		log.Printf("Time elapsed: %s", elapsed)
 		allActions := getActions(n)
 		for i, act := range  allActions{
 			actionsReturn.actionStrings[i] = C.CString(act)
@@ -206,6 +239,8 @@ func doSearches(pcs []int, kindOfSearch string) C.action{
 }
 
 func main() {
+	//doSearches([]int {15,16}, "A*H1")
+	//doSearches([]int {14,15,16}, "A*H2")
 
 }
 
