@@ -66,7 +66,9 @@ func createProblem(parcels []int) Problem{
 		for parcel1.Next(){
 			var p Parcel
 			err = parcel1.Scan(&p.Id, &p.Weight, &p.Price, &p.DestinationFrom, &p.DestinationTo,
-				&p.ReceiverId, &p.SenderId, &p.DateCreated, &p.IsDelivered, &p.DateSent, &p.IsSent)
+				&p.ReceiverId, &p.SenderId, &p.DateCreated, &p.IsDelivered, &p.DateSent, &p.IsSent,
+				&p.SenderName, &p.SenderSurname, &p.SenderContact, &p.ReceiverName, &p.ReceiverSurname,
+				&p.ReceiverContact, &p.Description, &p.IsApproved)
 			if err != nil {
 				panic(err.Error())
 			}

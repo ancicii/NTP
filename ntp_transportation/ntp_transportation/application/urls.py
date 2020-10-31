@@ -18,6 +18,8 @@ urlpatterns = [
     path('sendParcelsUser/', views.send_parcels_user, name="send-parcel-user"),
     path('doSearch/', views.call_go_search_function, name="do-search"),
     path('showResult/', views.show_result, name="show-result"),
-
+    path('findUser/', views.find_user, name="find-user"),
+    path('parcelsToApprove/', views.approve_parcels, name="approve-parcels"),
+    path('myParcels/', views.my_parcels, name="my-parcels"),
 
 ]

@@ -13,27 +13,27 @@
                 </li>
                 {% if request.user.is_staff %}
                     <li class="nav-item">
-                        <a class="nav-link" href="/addParcel" style="color: #fff;">Add Parcel</a>
+                        <a class="nav-link" href="/sendParcels" style="color: #fff;">Parcels Management</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/addParcel" style="color: #fff;">Create Parcel</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/addTrain" style="color: #fff;">Add Train</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/sendParcels" style="color: #fff;">Send Parcels</a>
-                    </li>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link" href="/parcelsToApprove" style="color: #fff;">Approve Parcels</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/sendParcelsUser" style="color: #fff;">Send ParcelsU</a>
+                        <a class="nav-link" href="/logout" style="color: #fff;">Logout</a>
+                    </li>
+                {% elif request.user.is_authenticated and not request.user.is_staff %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/sendParcelsUser" style="color: #fff;">Send Parcels</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/myParcels" style="color: #fff;">My Parcels</a>
                     </li>
-                    </li>
-                {% endif %}
-                {% if request.user.is_authenticated %}
                     <li class="nav-item">
                         <a class="nav-link" href="/logout" style="color: #fff;">Logout</a>
                     </li>

@@ -113,6 +113,15 @@ type Parcel struct {
 	DateSent sql.NullTime
 	IsDelivered bool
 	IsSent bool
+	IsApproved bool
+	SenderName sql.NullString
+	SenderSurname sql.NullString
+	SenderContact sql.NullString
+	ReceiverName sql.NullString
+	ReceiverSurname sql.NullString
+	ReceiverContact sql.NullString
+	Description string
+
 
 }
 

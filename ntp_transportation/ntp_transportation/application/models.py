@@ -2,11 +2,12 @@ from django.core.validators import MinValueValidator
 from django.db import models
 from .utils import RoleEnum
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from phonenumber_field.modelfields import PhoneNumberField
 
 
 class MyAccountManager(BaseUserManager):
 
-    def create_user(self, email, username, name, surname, address, city, password=None):
+    def create_user(self, email, username, name, surname, address, mobile, password=None):
         if not email:
             raise ValueError("User must have an email address")
         if not username:
@@ -17,8 +18,8 @@ class MyAccountManager(BaseUserManager):
             raise ValueError("User must have a surname")
         if not address:
             raise ValueError("User must have an address")
-        if not city:
-            raise ValueError("User must have a city")
+        if not mobile:
+            raise ValueError("User must have a phone number")
 
         user = self.model(
             email=self.normalize_email(email),
@@ -26,13 +27,13 @@ class MyAccountManager(BaseUserManager):
             name=name,
             surname=surname,
             address=address,
-            city=city,
+            mobile=mobile,
         )
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email, username, name, surname, address, city, password):
+    def create_superuser(self, email, username, name, surname, address, mobile, password):
         user = self.create_user(
             email=self.normalize_email(email),
             password=password,
@@ -40,7 +41,7 @@ class MyAccountManager(BaseUserManager):
             name=name,
             surname=surname,
             address=address,
-            city=city,
+            mobile=mobile,
         )
         user.is_admin = True
         user.is_staff = True
@@ -63,9 +64,10 @@ class User(AbstractBaseUser):
     role = models.CharField(max_length=50, choices=RoleEnum.choices(), default=RoleEnum.REGISTERED_USER)
     address = models.CharField(max_length=254)
     city = models.CharField(max_length=254)
+    mobile = PhoneNumberField(null=False, blank=False, unique=True, max_length=200)
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username', 'name', 'surname', 'address', 'city']
+    REQUIRED_FIELDS = ['username', 'name', 'surname', 'address', 'mobile']
 
     objects = MyAccountManager()
 
@@ -90,6 +92,14 @@ class Parcel(models.Model):
     dateSent = models.DateTimeField(verbose_name='date sent', auto_now_add=False, null=True)
     isDelivered = models.BooleanField(default=False)
     isSent = models.BooleanField(default=False)
+    isApproved = models.BooleanField(default=True)
+    senderName = models.CharField(max_length=200, null=True)
+    senderSurname = models.CharField(max_length=200, null=True)
+    senderContact = PhoneNumberField(null=False, blank=False, unique=False, max_length=200)
+    receiverName = models.CharField(max_length=200, null=True)
+    receiverSurname = models.CharField(max_length=200, null=True)
+    receiverContact = PhoneNumberField(null=False, blank=False, unique=False, max_length=200)
+    description = models.CharField(max_length=500)
 
 
 class Train(models.Model):

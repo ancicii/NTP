@@ -1,0 +1,144 @@
+{% extends 'application/main.html' %}
+
+{% block content %}
+
+    <div class="page-wrapper bg-gra-01 p-t-90 font-poppins">
+        <div class="wrapper wrapper--w1500">
+            <div class="card1 card-4">
+                <div class="card-body1">
+                    <h2 class="title">Approve Parcels</h2>
+
+                    <table id="approve_parcels_table" class="table table-striped table-bordered" style="width:100%">
+                        <thead>
+                        <tr>
+                            <th>Destination From</th>
+                            <th>Destination To</th>
+                            <th>Date Created</th>
+                            <th>Select</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for o in obj %}
+                            <tr>
+                                <td>{{ o.destination_from }}</td>
+                                <td>{{ o.destination_to }}</td>
+                                <td>{{ o.dateCreated }}</td>
+                                <td>
+                                    <div class="checkbox checkbox-primary">
+                                        <input type="checkbox" class="checkbox-row" name="selectedParcels"
+                                               id="{{ o.id }}" value="{{ o.id }}">
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">
+                                    <p style="font-family:'Georgia'; margin-top: -10px"> Weight: {{ o.weight }}</p>
+                                    <p style="font-family:'Georgia'; margin-top: -15px"> Price: {{ o.price }}</p>
+                                    {% if o.sender is null %}
+                                        <p style="font-family:'Georgia'; margin-top: -15px">
+                                            Sender: {{ o.senderSurname }} {{ o.senderName }}</p>
+                                        <p style="font-family:'Georgia'; margin-top: -15px">Sender
+                                            Contact: {{ o.senderContact }}</p>
+                                    {% else %}
+                                        <p style="font-family:'Georgia'; margin-top: -15px">
+                                            Sender: {{ o.sender.surname }} {{ o.sender.name }}</p>
+                                        <p style="font-family:'Georgia'; margin-top: -15px">Sender
+                                            Contact: {{ o.sender.mobile }}</p>
+                                    {% endif %}
+                                    {% if o.receiver is null %}
+                                        <p style="font-family:'Georgia'; margin-top: -15px">
+                                            Receiver: {{ o.receiverSurname }} {{ o.receiverName }}</p>
+                                        <p style="font-family:'Georgia'; margin-top: -15px">Receiver
+                                            Contact: {{ o.receiverContact }}</p>
+                                    {% else %}
+                                        <p style="font-family:'Georgia'; margin-top: -15px">
+                                            Contact: {{ o.receiver.mobile }}</p>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+
+                    </table>
+                    <div class="row d-flex justify-content-center">
+                        <div class="col-1">
+                            <button class="btn btn--radius-2 btn--blue" id="approveBtn" type="submit">Approve</button>
+                        </div>
+                        <div class="col-1">
+                            <button class="btn btn--radius-2 btn--blue" id="declineBtn" type="submit">Decline</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script>
+
+        $(function () {
+            $("td[colspan=3]").hide();
+            $("table").click(function (event) {
+                event.stopPropagation();
+                var $target = $(event.target);
+                if (!$target.hasClass('checkbox-row') && !$target.is('p')) {
+                    console.log($target.closest("td"))
+                    if ($target.closest("td").attr("colspan") > 1) {
+                        $target.slideUp();
+                    } else {
+                        $target.closest("tr").next().find("td").slideToggle();
+                    }
+                }
+
+            });
+        });
+
+        $("#approveBtn").click(function () {
+            var selectedParcels = [];
+            $('input[name="selectedParcels"]:checked').each(function () {
+                selectedParcels.push(this.value)
+            });
+            var parcelsToApprove = selectedParcels.join(',')
+            $.ajax({
+                url: '/parcelsToApprove/',
+                data: {
+                    'parcelsToApprove': parcelsToApprove
+                },
+                success: function () {
+                    location.reload();
+                },
+                error: function (e) {
+                    console.log("error");
+                }
+            })
+        });
+
+        $("#declineBtn").click(function () {
+            var selectedParcels = [];
+            $('input[name="selectedParcels"]:checked').each(function () {
+                selectedParcels.push(this.value)
+            });
+            var parcelsToDecline = selectedParcels.join(',')
+            $.ajax({
+                url: '/parcelsToApprove/',
+                data: {
+                    'parcelsToDecline': parcelsToDecline
+                },
+                success: function () {
+                    location.reload();
+                },
+                error: function (e) {
+                    console.log("error");
+                }
+            })
+        });
+    </script>
+
+    <style>
+        .container {
+            background-color: #a58ed2
+        }
+    </style>
+
+
+{% endblock content %}

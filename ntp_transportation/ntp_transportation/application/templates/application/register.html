@@ -1,154 +1,171 @@
 {% extends 'application/main.html' %}
 
 {% block content %}
-<div class="page-wrapper bg-gra-01 p-t-90 font-poppins">
-  <div class="wrapper wrapper--w680">
-    <div class="card card-4">
-      <div class="card-body">
-        <h2 class="title">Registration</h2>
-        <form method="POST">
-          {% csrf_token %}
-          <div class="row row-space">
-            <div class="col-6">
-              {% if form.name.errors %}
-              <div class="alert alert-danger input-group">
-              <strong>
-                  <label class="label">First Name</label> </strong>
-                    {{form.name}}
-                    <strong style="margin-top: 10px; font-size: 13px"> {{ form.name.errors|escape }} </strong>
-              </div>
-                {% else %}
-                <div class="input-group">
-                  <label class="label">First Name</label>
-                    {{form.name}}
-                </div>
-                {% endif %}
-            </div>
-            <div class="col-6">
-              {% if form.surname.errors %}
-              <div class="alert alert-danger input-group">
-              <strong>
-                  <label class="label">Last Name</label></strong>
-                    {{form.surname}}
-                    <strong style="margin-top: 10px; font-size: 13px"> {{ form.surname.errors|escape }} </strong>
-              </div>
-                {% else %}
-                <div class="input-group">
-                  <label class="label">Last Name</label>
-                    {{form.surname}}
-                </div>
-                {% endif %}
-          </div>
-          </div>
-          <div class="row row-space">
-            <div class="col-6">
-                {% if form.email.errors %}
-              <div class="alert alert-danger input-group">
-                  <strong> <label class="label">Email</label></strong>
-                   {{form.email}}
-                    <strong style="margin-top: 10px; font-size: 13px"> {{ form.email.errors|escape }} </strong>
-              </div>
-                {% else %}
-                <div class="input-group">
-                  <label class="label">Email</label>
-                    {{form.email}}
-                </div>
-                {% endif %}
-            </div>
-            <div class="col-6">
-              {% if form.username.errors %}
-              <div class="alert alert-danger input-group">
-              <strong>
-                  <label class="label">Username</label></strong>
-                    {{form.username}}
-                    <strong style="margin-top: 10px; font-size: 13px"> {{ form.username.errors|escape }} </strong>
-              </div>
-                {% else %}
-                <div class="input-group">
-                  <label class="label">Username</label>
-                    {{form.username}}
-                </div>
-                {% endif %}
-            </div>
-          </div>
-          <div class="row row-space">
-            <div class="col-6">
-                 {% if form.password1.errors %}
-              <div class="alert alert-danger input-group">
-              <strong>
-                  <label class="label">Password</label></strong>
-                    {{form.password1}}
-                    <strong style="margin-top: 10px; font-size: 13px"> {{ form.password1.errors|escape }} </strong>
-              </div>
-                {% else %}
-                <div class="input-group">
-                  <label class="label">Password</label>
-                    {{form.password1}}
-                </div>
-                {% endif %}
-              </div>
-            <div class="col-6">
-                 {% if form.password2.errors %}
-              <div class="alert alert-danger input-group">
-              <strong>
-                  <label class="label">Repeat Password</label></strong>
-                    {{form.password2}}
-                    <strong style="margin-top: 10px; font-size: 13px"> {{ form.password2.errors|escape }} </strong>
-              </div>
-                {% else %}
-                <div class="input-group">
-                  <label class="label">Repeat Password</label>
-                    {{form.password2}}
-                </div>
-                {% endif %}
-              </div>
-          </div>
-          <div class="row row-space">
-            <div class="col-6">
-                 {% if form.address.errors %}
-              <div class="alert alert-danger input-group">
-              <strong>
-                  <label class="label">address</label></strong>
-                    {{form.address}}
-                    <strong style="margin-top: 10px; font-size: 13px"> {{ form.address.errors|escape }} </strong>
-              </div>
-                {% else %}
-                <div class="input-group">
-                  <label class="label">address</label>
-                    {{form.address}}
-                </div>
-                {% endif %}
-              </div>
-            <div class="col-6">
-                 {% if form.city.errors %}
-              <div class="alert alert-danger input-group">
-              <strong>
-                  <label class="label">city</label></strong>
-                    {{form.city}}
-                    <strong style="margin-top: 10px; font-size: 13px"> {{ form.city.errors|escape }} </strong>
-              </div>
-                {% else %}
-                <div class="input-group">
-                  <label class="label">city</label>
-                    {{form.city}}
-                </div>
-                {% endif %}
-              </div>
-          </div>
+    <div class="page-wrapper bg-gra-01 p-t-90 font-poppins">
+        <div class="wrapper wrapper--w680">
+            <div class="card card-4">
+                <div class="card-body">
+                    <h2 class="title">Registration</h2>
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="row row-space">
+                            <div class="col-6">
+                                {% if form.name.errors %}
+                                    <div class="alert alert-danger input-group">
+                                        <strong>
+                                            <label class="label">First Name</label> </strong>
+                                        {{ form.name }}
+                                        <strong style="margin-top: 10px; font-size: 13px"> {{ form.name.errors|escape }} </strong>
+                                    </div>
+                                {% else %}
+                                    <div class="input-group">
+                                        <label class="label">First Name</label>
+                                        {{ form.name }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-6">
+                                {% if form.surname.errors %}
+                                    <div class="alert alert-danger input-group">
+                                        <strong>
+                                            <label class="label">Last Name</label></strong>
+                                        {{ form.surname }}
+                                        <strong style="margin-top: 10px; font-size: 13px"> {{ form.surname.errors|escape }} </strong>
+                                    </div>
+                                {% else %}
+                                    <div class="input-group">
+                                        <label class="label">Last Name</label>
+                                        {{ form.surname }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="row row-space">
+                            <div class="col-6">
+                                {% if form.email.errors %}
+                                    <div class="alert alert-danger input-group">
+                                        <strong> <label class="label">Email</label></strong>
+                                        {{ form.email }}
+                                        <strong style="margin-top: 10px; font-size: 13px"> {{ form.email.errors|escape }} </strong>
+                                    </div>
+                                {% else %}
+                                    <div class="input-group">
+                                        <label class="label">Email</label>
+                                        {{ form.email }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-6">
+                                {% if form.username.errors %}
+                                    <div class="alert alert-danger input-group">
+                                        <strong>
+                                            <label class="label">Username</label></strong>
+                                        {{ form.username }}
+                                        <strong style="margin-top: 10px; font-size: 13px"> {{ form.username.errors|escape }} </strong>
+                                    </div>
+                                {% else %}
+                                    <div class="input-group">
+                                        <label class="label">Username</label>
+                                        {{ form.username }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="row row-space">
+                            <div class="col-6">
+                                {% if form.password1.errors %}
+                                    <div class="alert alert-danger input-group">
+                                        <strong>
+                                            <label class="label">Password</label></strong>
+                                        {{ form.password1 }}
+                                        <strong style="margin-top: 10px; font-size: 13px"> {{ form.password1.errors|escape }} </strong>
+                                    </div>
+                                {% else %}
+                                    <div class="input-group">
+                                        <label class="label">Password</label>
+                                        {{ form.password1 }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-6">
+                                {% if form.password2.errors %}
+                                    <div class="alert alert-danger input-group">
+                                        <strong>
+                                            <label class="label">Repeat Password</label></strong>
+                                        {{ form.password2 }}
+                                        <strong style="margin-top: 10px; font-size: 13px"> {{ form.password2.errors|escape }} </strong>
+                                    </div>
+                                {% else %}
+                                    <div class="input-group">
+                                        <label class="label">Repeat Password</label>
+                                        {{ form.password2 }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="row row-space">
+                            <div class="col-6">
+                                {% if form.address.errors %}
+                                    <div class="alert alert-danger input-group">
+                                        <strong>
+                                            <label class="label">address</label></strong>
+                                        {{ form.address }}
+                                        <strong style="margin-top: 10px; font-size: 13px"> {{ form.address.errors|escape }} </strong>
+                                    </div>
+                                {% else %}
+                                    <div class="input-group">
+                                        <label class="label">address</label>
+                                        {{ form.address }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-6">
+                                {% if form.city.errors %}
+                                    <div class="alert alert-danger input-group">
+                                        <strong>
+                                            <label class="label">city</label></strong>
+                                        {{ form.city }}
+                                        <strong style="margin-top: 10px; font-size: 13px"> {{ form.city.errors|escape }} </strong>
+                                    </div>
+                                {% else %}
+                                    <div class="input-group">
+                                        <label class="label">city</label>
+                                        {{ form.city }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="row row-space">
+                            <div class="col">
+                                {% if form.mobile.errors %}
+                                    <div class="alert alert-danger input-group">
+                                        <strong> <label class="label">Phone Number</label></strong>
+                                        {{ form.mobile }}
+                                        <strong style="margin-top: 10px; font-size: 13px"> {{ form.mobile.errors|escape }} </strong>
+                                    </div>
+                                {% else %}
+                                    <div class="input-group">
+                                        <label class="label">Phone Number</label>
+                                        {{ form.mobile }}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                        </div>
 
 
-            <div class="p-t-55 center">
-              <button class="btn btn--radius-2 btn--blue" type="submit">Submit</button>
-            </div>
+                        <div class="p-t-55 center">
+                            <button class="btn btn--radius-2 btn--blue" type="submit">Submit</button>
+                        </div>
 
-        </form>
-      </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
 
-     <script>
-        function activatePlacesSearch(){
+    <script>
+        function activatePlacesSearch() {
             let options = {
                 types: ['address']
             };
@@ -157,16 +174,11 @@
             let autocomplete = new google.maps.places.Autocomplete(input1, options);
             autocomplete.addListener("place_changed", () => {
                 let city = input1.value.split(", ").slice(1).join(", ");
-                input.value = city;
+                input.setAttribute('value', city);
             });
         }
-
-        function setAddress(address){
-            console.log(address);
-            console.log(document.getElementById('address').value)
-        }
-
     </script>
-    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAIJCoIXnAfnAIM-XYrTnmzr8ya5pPehdQ&libraries=places&callback=activatePlacesSearch"></script>
+    <script type="text/javascript"
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAIJCoIXnAfnAIM-XYrTnmzr8ya5pPehdQ&libraries=places&callback=activatePlacesSearch"></script>
 
 {% endblock %}

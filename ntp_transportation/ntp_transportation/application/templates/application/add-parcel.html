@@ -8,35 +8,136 @@
                     <h2 class="title">Add New Parcel</h2>
                     <form method="POST">
                         {% csrf_token %}
-                        <div class="row row-space">
-                            {% if form.destination_from.errors %}
-                                <div class="alert alert-danger input-group">
-                                    <strong>
-                                        <label class="label">Destination From</label> </strong>
-                                    {{ form.destination_from }}
-                                    <strong style="margin-top: 10px; font-size: 13px"> {{ form.destination_from.errors|escape }} </strong>
+                        <div class="row">
+
+                            <div class="col" style="margin-right: 15px">
+                                <div class="row row-space">
+                                    {% if form.senderName.errors %}
+                                        <div class="alert alert-danger input-group">
+                                            <strong>
+                                                <label class="label">Sender Name</label> </strong>
+                                            {{ form.senderName }}
+                                            <strong style="margin-top: 10px; font-size: 13px"> {{ form.senderName.errors|escape }} </strong>
+                                        </div>
+                                    {% else %}
+                                        <label class="label">Sender Name</label>
+                                        <div class="input-group">
+                                            {{ form.senderName }}
+                                        </div>
+                                    {% endif %}
                                 </div>
-                            {% else %}
-                                <label class="label">Destination From</label>
-                                <div class="input-group">
-                                    {{ form.destination_from }}
+                                <div class="row row-space">
+                                    {% if form.senderSurname.errors %}
+                                        <div class="alert alert-danger input-group">
+                                            <strong>
+                                                <label class="label">Sender Surname</label> </strong>
+                                            {{ form.senderSurname }}
+                                            <strong style="margin-top: 10px; font-size: 13px"> {{ form.senderSurname.errors|escape }} </strong>
+                                        </div>
+                                    {% else %}
+                                        <label class="label">Sender Surname</label>
+                                        <div class="input-group">
+                                            {{ form.senderSurname }}
+                                        </div>
+                                    {% endif %}
                                 </div>
-                            {% endif %}
-                        </div>
-                        <div class="row row-space">
-                            {% if form.destination_to.errors %}
-                                <div class="alert alert-danger input-group">
-                                    <strong>
-                                        <label class="label">Destination To</label> </strong>
-                                    {{ form.destination_to }}
-                                    <strong style="margin-top: 10px; font-size: 13px"> {{ form.destination_to.errors|escape }} </strong>
+                                <div class="row row-space">
+                                    {% if form.senderContact.errors %}
+                                        <div class="alert alert-danger input-group">
+                                            <strong>
+                                                <label class="label">Sender Contact</label> </strong>
+                                            {{ form.senderContact }}
+                                            <strong style="margin-top: 10px; font-size: 13px"> {{ form.senderContact.errors|escape }} </strong>
+                                        </div>
+                                    {% else %}
+                                        <label class="label">Sender Contact</label>
+                                        <div class="input-group">
+                                            {{ form.senderContact }}
+                                        </div>
+                                    {% endif %}
                                 </div>
-                            {% else %}
-                                <label class="label">Destination To</label>
-                                <div class="input-group">
-                                    {{ form.destination_to }}
+                                <div class="row row-space">
+                                    {% if form.destination_from.errors %}
+                                        <div class="alert alert-danger input-group">
+                                            <strong>
+                                                <label class="label">Destination From</label> </strong>
+                                            {{ form.destination_from }}
+                                            <strong style="margin-top: 10px; font-size: 13px"> {{ form.destination_from.errors|escape }} </strong>
+                                        </div>
+                                    {% else %}
+                                        <label class="label">Destination From</label>
+                                        <div class="input-group">
+                                            {{ form.destination_from }}
+                                        </div>
+                                    {% endif %}
                                 </div>
-                            {% endif %}
+
+                            </div>
+                            <div class="col" style="margin-left: 15px">
+                                <div class="row row-space">
+                                    {% if form.receiverName.errors %}
+                                        <div class="alert alert-danger input-group">
+                                            <strong>
+                                                <label class="label">Receiver Name</label> </strong>
+                                            {{ form.receiverName }}
+                                            <strong style="margin-top: 10px; font-size: 13px"> {{ form.receiverName.errors|escape }} </strong>
+                                        </div>
+                                    {% else %}
+                                        <label class="label">Receiver Name</label>
+                                        <div class="input-group">
+                                            {{ form.receiverName }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="row row-space">
+                                    {% if form.receiverSurname.errors %}
+                                        <div class="alert alert-danger input-group">
+                                            <strong>
+                                                <label class="label">Receiver Surname</label> </strong>
+                                            {{ form.receiverSurname }}
+                                            <strong style="margin-top: 10px; font-size: 13px"> {{ form.receiverSurname.errors|escape }} </strong>
+                                        </div>
+                                    {% else %}
+                                        <label class="label">Receiver Surname</label>
+                                        <div class="input-group">
+                                            {{ form.receiverSurname }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="row row-space">
+                                    {% if form.receiverContact.errors %}
+                                        <div class="alert alert-danger input-group">
+                                            <strong>
+                                                <label class="label">Receiver Contact</label> </strong>
+                                            {{ form.receiverContact }}
+                                            <strong style="margin-top: 10px; font-size: 13px"> {{ form.receiverContact.errors|escape }} </strong>
+                                        </div>
+                                    {% else %}
+                                        <label class="label">Receiver Contact</label>
+                                        <div class="input-group">
+                                            {{ form.receiverContact }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="row row-space">
+                                    {% if form.destination_to.errors %}
+                                        <div class="alert alert-danger input-group">
+                                            <strong>
+                                                <label class="label">Destination To</label> </strong>
+                                            {{ form.destination_to }}
+                                            <strong style="margin-top: 10px; font-size: 13px"> {{ form.destination_to.errors|escape }} </strong>
+                                        </div>
+                                    {% else %}
+                                        <label class="label">Destination To</label>
+                                        <div class="input-group">
+                                            {{ form.destination_to }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+
+                            </div>
+
+
                         </div>
                         <div class="row row-space">
                             {% if form.weight.errors %}
@@ -56,12 +157,27 @@
                                 </div>
                             {% endif %}
                         </div>
-
+                        <div class="row row-space">
+                            {% if form.description.errors %}
+                                <div class="alert alert-danger input-group">
+                                    <strong>
+                                        <label class="label">Description</label> </strong>
+                                    {{ form.description }}
+                                    <strong style="margin-top: 10px; font-size: 13px"> {{ form.description.errors|escape }} </strong>
+                                </div>
+                            {% else %}
+                                <label class="label">Description</label>
+                                <div class="input-group">
+                                    {{ form.description }}
+                                </div>
+                            {% endif %}
+                        </div>
                         <div class="p-t-55 center">
                             <button class="btn btn--radius-2 btn--blue" type="submit">Submit</button>
                         </div>
-
                     </form>
+
+
                 </div>
             </div>
         </div>
