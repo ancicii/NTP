@@ -31,7 +31,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td colspan="3">
+                                <td colspan="4">
                                     <p style="font-family:'Georgia'; margin-top: -10px"> Weight: {{ o.weight }}</p>
                                     <p style="font-family:'Georgia'; margin-top: -15px"> Price: {{ o.price }}</p>
                                     {% if o.sender is null %}
@@ -52,6 +52,8 @@
                                             Contact: {{ o.receiverContact }}</p>
                                     {% else %}
                                         <p style="font-family:'Georgia'; margin-top: -15px">
+                                            Receiver: {{ o.receiver.surname }} {{ o.receiver.name }}</p>
+                                        <p style="font-family:'Georgia'; margin-top: -15px">Receiver
                                             Contact: {{ o.receiver.mobile }}</p>
                                     {% endif %}
                                 </td>
@@ -69,10 +71,7 @@
                                     <option value="BFS">Breadth First Search</option>
                                     <option value="DFS">Depth First Search</option>
                                     <option value="UCS">Uniform Cost Search</option>
-                                    <option value="A*H1">A* Search with Heuristic 1 (Sum of non achieved goal states)
-                                    </option>
-                                    <option value="A*H2">A* Search with Heuristic 2 (Sum of distances from parcels
-                                        current city to goal city)
+                                    <option value="A*H1">A* Search with Heuristic (Sum of non achieved goal states)
                                     </option>
                                 </select>
                             </div>
@@ -90,7 +89,7 @@
     <script>
         $
         $(function () {
-            $("td[colspan=3]").hide();
+            $("td[colspan=4]").hide();
             $("table").click(function (event) {
                 event.stopPropagation();
                 var $target = $(event.target);

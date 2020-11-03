@@ -93,6 +93,7 @@ class Parcel(models.Model):
     isDelivered = models.BooleanField(default=False)
     isSent = models.BooleanField(default=False)
     isApproved = models.BooleanField(default=True)
+    isDeclined = models.BooleanField(default=False)
     senderName = models.CharField(max_length=200, null=True)
     senderSurname = models.CharField(max_length=200, null=True)
     senderContact = PhoneNumberField(null=False, blank=False, unique=False, max_length=200)

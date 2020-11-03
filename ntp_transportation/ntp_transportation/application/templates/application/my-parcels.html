@@ -6,67 +6,143 @@
         <div class="wrapper wrapper--w1500">
             <div class="card1 card-4">
                 <div class="card-body1">
-                    <h2 class="title">Approve Parcels</h2>
+                    <h2 class="title">My Parcels</h2>
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="nav-link2" data-toggle="tab" href="#toReceive">Parcels to
+                                Receive</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#sent">Sent Parcels</a>
+                        </li>
 
-                    <table id="approve_parcels_table" class="table table-striped table-bordered" style="width:100%">
-                        <thead>
-                        <tr>
-                            <th>Destination From</th>
-                            <th>Destination To</th>
-                            <th>Date Created</th>
-                            <th>Select</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for o in obj %}
-                            <tr>
-                                <td>{{ o.destination_from }}</td>
-                                <td>{{ o.destination_to }}</td>
-                                <td>{{ o.dateCreated }}</td>
-                                <td>
-                                    <div class="checkbox checkbox-primary">
-                                        <input type="checkbox" class="checkbox-row" name="selectedParcels"
-                                               id="{{ o.id }}" value="{{ o.id }}">
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="3">
-                                    <p style="font-family:'Georgia'; margin-top: -10px"> Weight: {{ o.weight }}</p>
-                                    <p style="font-family:'Georgia'; margin-top: -15px"> Price: {{ o.price }}</p>
-                                    {% if o.sender is null %}
-                                        <p style="font-family:'Georgia'; margin-top: -15px">
-                                            Sender: {{ o.senderSurname }} {{ o.senderName }}</p>
-                                        <p style="font-family:'Georgia'; margin-top: -15px">Sender
-                                            Contact: {{ o.senderContact }}</p>
-                                    {% else %}
-                                        <p style="font-family:'Georgia'; margin-top: -15px">
-                                            Sender: {{ o.sender.surname }} {{ o.sender.name }}</p>
-                                        <p style="font-family:'Georgia'; margin-top: -15px">Sender
-                                            Contact: {{ o.sender.mobile }}</p>
-                                    {% endif %}
-                                    {% if o.receiver is null %}
-                                        <p style="font-family:'Georgia'; margin-top: -15px">
-                                            Receiver: {{ o.receiverSurname }} {{ o.receiverName }}</p>
-                                        <p style="font-family:'Georgia'; margin-top: -15px">Receiver
-                                            Contact: {{ o.receiverContact }}</p>
-                                    {% else %}
-                                        <p style="font-family:'Georgia'; margin-top: -15px">
-                                            Contact: {{ o.receiver.mobile }}</p>
-                                    {% endif %}
-                                </td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
+                    </ul>
 
-                    </table>
-                    <div class="row d-flex justify-content-center">
-                        <div class="col-1">
-                            <button class="btn btn--radius-2 btn--blue" id="approveBtn" type="submit">Approve</button>
+                    <div class="tab-content">
+                        <div class="tab-pane" id="sent" style="margin-left: 20px; margin-right: 15px"><br>
+                            <table id="approve_parcels_table" class="table table-striped table-bordered"
+                                   style="width:100%">
+                                <thead>
+                                <tr>
+                                    <th>Destination From</th>
+                                    <th>Destination To</th>
+                                    <th>Date Created</th>
+                                    <th>Is Approved</th>
+                                    <th>Date Sent</th>
+                                    <th>Is Delivered</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for o in objSent %}
+                                    <tr>
+                                        <td>{{ o.destination_from }}</td>
+                                        <td>{{ o.destination_to }}</td>
+                                        <td>{{ o.dateCreated }}</td>
+                                        {% if o.isApproved is False and o.isDeclined is False %}
+                                            <td>Parcel not reviewed yet</td>
+                                        {% elif o.isApproved is False and o.isDeclined is True %}
+                                            <td>Parcel declined</td>
+                                        {% else %}
+                                            <td>Approved</td>
+                                        {% endif %}
+                                        {% if o.dateSent is None and o.isDeclined is False %}
+                                            <td>Not sent yet</td>
+                                        {% elif o.dateSent is None and o.isDeclined is True %}
+                                            <td>/</td>
+                                        {% else %}
+                                            <td>{{ o.dateSent }}</td>
+                                        {% endif %}
+                                        {% if o.isDelivered is False and o.isDeclined is False %}
+                                            <td>Not delivered yet</td>
+                                        {% elif o.isDelivered is False and o.isDeclined is True %}
+                                            <td>/</td>
+                                        {% else %}
+                                            <td>Delivered</td>
+                                        {% endif %}
+
+                                    </tr>
+                                    <tr>
+                                        <td colspan="6">
+                                            <p style="font-family:'Georgia'; margin-top: -10px">
+                                                Weight: {{ o.weight }}</p>
+                                            <p style="font-family:'Georgia'; margin-top: -15px">
+                                                Price: {{ o.price }}</p>
+                                            {% if o.receiver is null %}
+                                                <p style="font-family:'Georgia'; margin-top: -15px">
+                                                    Receiver: {{ o.receiverSurname }} {{ o.receiverName }}</p>
+                                                <p style="font-family:'Georgia'; margin-top: -15px">Receiver
+                                                    Contact: {{ o.receiverContact }}</p>
+                                            {% else %}
+                                                <p style="font-family:'Georgia'; margin-top: -15px">
+                                                    Receiver: {{ o.receiver.surname }} {{ o.receiver.name }}</p>
+                                                <p style="font-family:'Georgia'; margin-top: -15px">Receiver
+                                                    Contact: {{ o.receiver.mobile }}</p>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+
                         </div>
-                        <div class="col-1">
-                            <button class="btn btn--radius-2 btn--blue" id="declineBtn" type="submit">Decline</button>
+                        <div class="tab-pane active" id="toReceive" style="margin-left: 20px; margin-right: 15px"><br>
+                            <table id="approve_parcels_table" class="table table-striped table-bordered"
+                                   style="width:100%">
+                                <thead>
+                                <tr>
+                                    <th>Destination From</th>
+                                    <th>Destination To</th>
+                                    <th>Date Created</th>
+                                    <th>Date Sent</th>
+                                    <th>Is Received</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for o in objToReceive %}
+                                    <tr>
+                                        <td class="id" style="display:none;">{{ o.id }}</td>
+                                        <td>{{ o.destination_from }}</td>
+                                        <td>{{ o.destination_to }}</td>
+                                        <td>{{ o.dateCreated }}</td>
+                                        {% if o.dateSent is None %}
+                                            <td>Not sent yet</td>
+                                        {% else %}
+                                            <td>{{ o.dateSent }}</td>
+                                        {% endif %}
+                                        {% if o.isDelivered is False %}
+                                            <td class="text-center">
+                                                <button class="btn btn-success badge-pill" id="receivedBtn">RECEIVED</button>
+                                            </td>
+                                        {% else %}
+                                            <td>Delivered</td>
+                                        {% endif %}
+
+                                    </tr>
+                                    <tr>
+                                        <td colspan="5">
+                                            <p style="font-family:'Georgia'; margin-top: -10px">
+                                                Weight: {{ o.weight }}</p>
+                                            <p style="font-family:'Georgia'; margin-top: -15px">
+                                                Price: {{ o.price }}</p>
+                                            {% if o.sender is null %}
+                                                <p style="font-family:'Georgia'; margin-top: -15px">
+                                                    Sender: {{ o.senderSurname }} {{ o.senderName }}</p>
+                                                <p style="font-family:'Georgia'; margin-top: -15px">Sender
+                                                    Contact: {{ o.senderContact }}</p>
+                                            {% else %}
+                                                <p style="font-family:'Georgia'; margin-top: -15px">
+                                                    Sender: {{ o.sender.surname }} {{ o.sender.name }}</p>
+                                                <p style="font-family:'Georgia'; margin-top: -15px">Sender
+                                                    Contact: {{ o.sender.mobile }}</p>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -77,11 +153,12 @@
     <script>
 
         $(function () {
-            $("td[colspan=3]").hide();
+            $("td[colspan=5]").hide();
+            $("td[colspan=6]").hide();
             $("table").click(function (event) {
                 event.stopPropagation();
-                var $target = $(event.target);
-                if (!$target.hasClass('checkbox-row') && !$target.is('p')) {
+                const $target = $(event.target);
+                if (!$target.hasClass('btn') && !$target.is('p')) {
                     console.log($target.closest("td"))
                     if ($target.closest("td").attr("colspan") > 1) {
                         $target.slideUp();
@@ -93,39 +170,15 @@
             });
         });
 
-        $("#approveBtn").click(function () {
-            var selectedParcels = [];
-            $('input[name="selectedParcels"]:checked').each(function () {
-                selectedParcels.push(this.value)
-            });
-            var parcelsToApprove = selectedParcels.join(',')
+        $("#receivedBtn").click(function () {
+            let $id = $(this).closest("tr").find(".id").text();
             $.ajax({
-                url: '/parcelsToApprove/',
+                url: '/setReceived/',
                 data: {
-                    'parcelsToApprove': parcelsToApprove
+                    'parcelId': $id
                 },
                 success: function () {
-                    location.reload();
-                },
-                error: function (e) {
-                    console.log("error");
-                }
-            })
-        });
-
-        $("#declineBtn").click(function () {
-            var selectedParcels = [];
-            $('input[name="selectedParcels"]:checked').each(function () {
-                selectedParcels.push(this.value)
-            });
-            var parcelsToDecline = selectedParcels.join(',')
-            $.ajax({
-                url: '/parcelsToApprove/',
-                data: {
-                    'parcelsToDecline': parcelsToDecline
-                },
-                success: function () {
-                    location.reload();
+                    window.location.reload();
                 },
                 error: function (e) {
                     console.log("error");

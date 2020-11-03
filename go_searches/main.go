@@ -68,7 +68,7 @@ func createProblem(parcels []int) Problem{
 			err = parcel1.Scan(&p.Id, &p.Weight, &p.Price, &p.DestinationFrom, &p.DestinationTo,
 				&p.ReceiverId, &p.SenderId, &p.DateCreated, &p.IsDelivered, &p.DateSent, &p.IsSent,
 				&p.SenderName, &p.SenderSurname, &p.SenderContact, &p.ReceiverName, &p.ReceiverSurname,
-				&p.ReceiverContact, &p.Description, &p.IsApproved)
+				&p.ReceiverContact, &p.Description, &p.IsApproved, &p.IsDeclined)
 			if err != nil {
 				panic(err.Error())
 			}
@@ -211,23 +211,10 @@ func doSearches(pcs []int, kindOfSearch string) C.action{
 		}
 	}else if kindOfSearch == "A*H1"{
 		start := time.Now()
-		fmt.Println("Starting A* Search with Heuristic 1 (Sum of non achieved goal states)...")
-		n := AStarSearch(problem, stateMap, "H1")
+		fmt.Println("Starting A* Search with Heuristic (Sum of non achieved goal states)...")
+		n := AStarSearch(problem, stateMap)
 		fmt.Println(getActions(n))
-		fmt.Println("End of A* Search with Heuristic 1 (Sum of non achieved goal states)...")
-		elapsed := time.Since(start)
-		log.Printf("Time elapsed: %s", elapsed)
-		allActions := getActions(n)
-		for i, act := range  allActions{
-			actionsReturn.actionStrings[i] = C.CString(act)
-
-		}
-	}else {
-		start := time.Now()
-		fmt.Println("Starting A* Search with Heuristic 2 (Sum of distances from parcels current city to goal city)...")
-		n := AStarSearch(problem, stateMap, "H2")
-		fmt.Println(getActions(n))
-		fmt.Println("End of A* Search with Heuristic 2 (Sum of distances from parcels current city to goal city)...")
+		fmt.Println("End of A* Search with Heuristic (Sum of non achieved goal states)...")
 		elapsed := time.Since(start)
 		log.Printf("Time elapsed: %s", elapsed)
 		allActions := getActions(n)
@@ -241,8 +228,6 @@ func doSearches(pcs []int, kindOfSearch string) C.action{
 }
 
 func main() {
-	//doSearches([]int {15,16}, "A*H1")
-	//doSearches([]int {14,15,16}, "A*H2")
 
 }
 

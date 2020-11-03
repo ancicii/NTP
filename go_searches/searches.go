@@ -118,7 +118,7 @@ func UniformCostSearch(problem Problem, stateMap *orderedmap.OrderedMap) *Node{
 }
 
 
-func AStarSearch(problem Problem, stateMap *orderedmap.OrderedMap, heuristic string) *Node{
+func AStarSearch(problem Problem, stateMap *orderedmap.OrderedMap) *Node{
 	state := problem.initialState
 	node := NewNode(state)
 
@@ -152,11 +152,7 @@ func AStarSearch(problem Problem, stateMap *orderedmap.OrderedMap, heuristic str
 			for _, add := range action.effectsAdd{
 				state1 = append(state1, add)
 			}
-			if heuristic=="H1" {
-				action.heuristicCost = problem.calculateH1(stateMap)
-			}else{
-				action.heuristicCost = problem.calculateH2(stateMap)
-			}
+			action.heuristicCost = problem.calculateH(stateMap)
 
 			child := NewChildNodeCost(state1, leaf, action)
 

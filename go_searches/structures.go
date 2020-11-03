@@ -114,6 +114,7 @@ type Parcel struct {
 	IsDelivered bool
 	IsSent bool
 	IsApproved bool
+	IsDeclined bool
 	SenderName sql.NullString
 	SenderSurname sql.NullString
 	SenderContact sql.NullString

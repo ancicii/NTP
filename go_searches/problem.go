@@ -57,8 +57,8 @@ func (p Problem) checkGoal(stateMap *orderedmap.OrderedMap) bool {
 	return true
 }
 
-//heuristic 1 racuna koliko ciljnih stanja nije ispunjeno
-func (p Problem) calculateH1(stateMap *orderedmap.OrderedMap) float64 {
+//heuristika racuna koliko ciljnih stanja nije ispunjeno
+func (p Problem) calculateH(stateMap *orderedmap.OrderedMap) float64 {
 	var h float64= 0
 	for _, state1 := range p.goalState{
 		s := fmt.Sprintf("%s(%s,%s)", state1.name, state1.arguments[0], state1.arguments[1])
@@ -72,32 +72,6 @@ func (p Problem) calculateH1(stateMap *orderedmap.OrderedMap) float64 {
 	return h
 }
 
-
-func (p Problem) calculateH2(stateMap *orderedmap.OrderedMap) float64 {
-
-	var h float64= 0
-	for _, state1 := range p.goalState{
-		for el := stateMap.Front(); el != nil; el = el.Next() {
-			if el.Value == 1{
-				str := fmt.Sprintf("%s", el.Key)
-				if strings.HasPrefix(str, "at"){
-					parcelId := strings.Split(strings.Split(str,",")[0], "(")[1]
-					parcelCurrentDestination := strings.TrimSuffix(strings.Split(str,",")[1]+ ", "+ strings.Split(str,",")[2], ")")
-					if parcelId == state1.arguments[0] && parcelCurrentDestination!= state1.arguments[1] {
-						h += distanceBetweenCitiesByRail(parcelCurrentDestination, state1.arguments[1])
-					}
-				} else if strings.HasPrefix(str, "in"){
-					parcelId := strings.Split(strings.Split(str,",")[0], "(")[1]
-					parcelCurrentTrain := getTrainsDestination(stateMap, strings.TrimSuffix(strings.Split(str,",")[1], ")"))
-					if parcelId == state1.arguments[0] && parcelCurrentTrain!= state1.arguments[1] {
-						h += distanceBetweenCitiesByRail(parcelCurrentTrain, state1.arguments[1])
-					}
-				}
-			}
-		}
-	}
-	return h
-}
 
 func getTrainsDestination(stateMap *orderedmap.OrderedMap, train string) string {
 	for el := stateMap.Front(); el != nil; el = el.Next() {

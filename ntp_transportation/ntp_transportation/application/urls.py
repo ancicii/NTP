@@ -10,7 +10,6 @@ urlpatterns = [
 
     path('', views.home, name="home"),
     path('home/', views.home),
-    path('user/', views.userPage, name="user-page"),
 
     path('addParcel/', views.add_parcel, name="add-parcel"),
     path('addTrain/', views.add_train, name="add-train"),
@@ -21,5 +20,7 @@ urlpatterns = [
     path('findUser/', views.find_user, name="find-user"),
     path('parcelsToApprove/', views.approve_parcels, name="approve-parcels"),
     path('myParcels/', views.my_parcels, name="my-parcels"),
+    path('setReceived/', views.set_received, name="parcel-received"),
+
 
 ]

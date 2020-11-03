@@ -1,8 +1,11 @@
 from datetime import datetime
 from pathlib import Path
 
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
 import json
+
+from django.core.mail import send_mail
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from .forms import CreateUserForm, NewParcelForm, NewTrainForm, NewParcelFormUser
@@ -26,6 +29,7 @@ class GoString(Structure):
 class Action(Structure):
     _fields_ = [('actionStrings', c_char_p * 800)]
 
+
 def get_routes_to_plot(list_of_found):
     allRoutes = {}
     for action in list_of_found:
@@ -41,6 +45,58 @@ def get_routes_to_plot(list_of_found):
                 allRoutes[trainId].append(endDestination)
 
     return allRoutes
+
+
+def send_email(parcel, type):
+    email_from = settings.EMAIL_HOST_USER
+    if type == 'shipped':
+        subject = "Package has been sent"
+        messageSender = "Dear, {} {}. Thank you for choosing our shipping service." \
+                        "Your parcel for {} {} has been sent." \
+                        "You'll be notified when your shipment arrives at the destination.".format(parcel.senderSurname,
+                                                                                                   parcel.senderName,
+                                                                                                   parcel.receiverSurname,
+                                                                                                   parcel.receiverName)
+        subject1 = "Expect package"
+        messageReceiver = "Dear, {} {}." \
+                          "A parcel for you has been sent.".format(parcel.receiverSurname,
+                                                                   parcel.receiverName)
+        if parcel.receiver is not None:
+            recipient_list_receiver = [parcel.receiver.email, ]
+            send_mail(subject1, messageReceiver, email_from, recipient_list_receiver)
+
+        recipient_list = [parcel.sender.email, ]
+        send_mail(subject, messageSender, email_from, recipient_list)
+    elif type == 'approved':
+        subject = "Your package has been approved"
+        message = "Dear, {} {}. Thank you for choosing our shipping service." \
+                  "Your parcel for {} {} has been approved." \
+                  "You'll be notified when we ship it to desired location.".format(parcel.senderSurname,
+                                                                                   parcel.senderName,
+                                                                                   parcel.receiverSurname,
+                                                                                   parcel.receiverName)
+        recipient_list = [parcel.sender.email, ]
+        send_mail(subject, message, email_from, recipient_list)
+    elif type == 'declined':
+        subject = "Your package has been declined"
+        message = "Dear, {} {}." \
+                  "We regret to inform you that your parcel for {} {} has been declined." \
+                  "If you have additional questions you can contact us.".format(parcel.senderSurname,
+                                                                                parcel.senderName,
+                                                                                parcel.receiverSurname,
+                                                                                parcel.receiverName)
+        recipient_list = [parcel.sender.email, ]
+        send_mail(subject, message, email_from, recipient_list)
+    elif type == 'received':
+        subject = "Your package arrived at the destination"
+        message = "Dear, {} {}." \
+                  "We are glad to inform you that your parcel for {} {} arrived." \
+                  "Thank you for ......".format(parcel.senderSurname,
+                                                parcel.senderName,
+                                                parcel.receiverSurname,
+                                                parcel.receiverName)
+        recipient_list = [parcel.sender.email, ]
+        send_mail(subject, message, email_from, recipient_list)
 
 
 @login_required(login_url="login")
@@ -72,14 +128,15 @@ def call_go_search_function(request):
         edit_parcel.isSent = True
         edit_parcel.dateSent = datetime.now()
         edit_parcel.save()
+        if edit_parcel.sender is not None:
+            send_email(edit_parcel, 'shipped')
+
     request.session['all_routes'] = all_routes
     request.session['actions'] = list_of_found
     response_data = {'result': 'success', 'message': 'Search done!'}
     return HttpResponse(json.dumps(response_data), content_type="application/json")
 
 
-@login_required(login_url="login")
-@allowed_users(allowed_roles=['ADMIN'])
 def write_to_file(list_of_found, search, parcel_list):
     with open('results.txt', 'a+') as f:
         f.write("parcels: ")
@@ -154,15 +211,10 @@ def register(request):
 
 
 @login_required(login_url="login")
-def userPage(request):
-    context = {}
-    return render(request, 'application/user.html', context)
-
-
-@login_required(login_url="login")
 @allowed_users(allowed_roles=['ADMIN'])
 def send_parcels(request):
-    obj = Parcel.objects.filter(isSent=False) & Parcel.objects.filter(isApproved=True)
+    obj = Parcel.objects.filter(isSent=False) & Parcel.objects.filter(isApproved=True) \
+          & Parcel.objects.filter(isDeclined=False)
     context = {'obj': obj}
     return render(request, 'application/send-parcels.html', context)
 
@@ -178,13 +230,17 @@ def approve_parcels(request):
             edit_parcel = Parcel.objects.get(id=i)
             edit_parcel.isApproved = True
             edit_parcel.save()
+            send_email(edit_parcel, 'approved')
     if parcelsDecline is not None:
         parcel_list = list(map(int, parcelsDecline.split(',')))
         for i in parcel_list:
             edit_parcel = Parcel.objects.get(id=i)
-            edit_parcel.delete()
+            edit_parcel.isDeclined = True
+            edit_parcel.save()
+            send_email(edit_parcel, 'declined')
 
-    obj = Parcel.objects.filter(isApproved=False) & Parcel.objects.filter(isSent=False)
+    obj = Parcel.objects.filter(isApproved=False) & Parcel.objects.filter(isSent=False) & Parcel.objects.filter(
+        isDeclined=False)
     context = {'obj': obj}
     return render(request, 'application/approve-parcels.html', context)
 
@@ -208,7 +264,7 @@ def send_parcels_user(request):
             instance.price = instance.weight * 0.01 + calculate_distance(instance.destination_from,
                                                                          instance.destination_to) * 0.02
             instance.save()
-            return redirect('home')
+            return redirect('my-parcels')
         elif form1.is_valid() and typeReq == "user":
             instance = form1.save(commit=False)
             instance.senderName = request.user.name
@@ -221,7 +277,7 @@ def send_parcels_user(request):
             instance.price = instance.weight * 0.01 + calculate_distance(instance.destination_from,
                                                                          instance.destination_to) * 0.02
             instance.save()
-            return redirect('home')
+            return redirect('my-parcels')
         else:
             context['form'] = form
             context['form1'] = form1
@@ -266,6 +322,17 @@ def find_user(request):
 @login_required(login_url="login")
 @allowed_users(allowed_roles=['REGISTERED_USER'])
 def my_parcels(request):
-    obj = Parcel.objects.filter(receiver_id=request.user.id) & Parcel.objects.filter(sender_id=request.user.id)
-    context = {'obj': obj}
+    objSent = Parcel.objects.filter(sender_id=request.user.id)
+    objToReceive = Parcel.objects.filter(receiver_id=request.user.id) & Parcel.objects.filter(isApproved=True)
+    context = {'objSent': objSent, 'objToReceive': objToReceive}
     return render(request, 'application/my-parcels.html', context)
+
+
+@login_required(login_url="login")
+@allowed_users(allowed_roles=['REGISTERED_USER'])
+def set_received(request):
+    edit_parcel = Parcel.objects.get(id=request.GET.get("parcelId", None))
+    edit_parcel.isDelivered = True
+    edit_parcel.save()
+    send_email(edit_parcel, 'received')
+    return render(request, 'application/my-parcels.html')
