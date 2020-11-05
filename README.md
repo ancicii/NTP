@@ -16,6 +16,8 @@ Rešavao bi se problem transporta svih m - paketa sa početne na krajnju destina
 - Pregled paketa koje treba da primi (korisnik)
 - Pregled paketa koji nisu poslati, izbor paketa i izbor pretrage za slanje (admin)
 - Pregled izracunatih ruta (admin)
+- Prihvatanje i odbjanje poslatih posiljki (admin)
+- Oznacavanje posiljke kao dostavljene (korisnik)
   
   
 ### Primer: 
