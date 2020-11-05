@@ -474,3 +474,178 @@ search used: BFS
 number of actions to goal: 4
 list of actions: Travel(train_9;Brighton, UK;Hamburg, Germany);Load(parcel_46;train_9;Hamburg, Germany);Travel(train_9;Hamburg, Germany;Novi Sad, Serbia);Unload(parcel_46;train_9;Novi Sad, Serbia);
 
+parcels: 43;
+search used: BFS
+number of actions to goal: 4
+list of actions: Travel(train_9;Brighton, UK;Hamburg, Germany);Load(parcel_43;train_9;Hamburg, Germany);Travel(train_9;Hamburg, Germany;Novi Sad, Serbia);Unload(parcel_43;train_9;Novi Sad, Serbia);
+
+parcels: 43;
+search used: BFS
+number of actions to goal: 4
+list of actions: Travel(train_9;Brighton, UK;Hamburg, Germany);Load(parcel_43;train_9;Hamburg, Germany);Travel(train_9;Hamburg, Germany;Novi Sad, Serbia);Unload(parcel_43;train_9;Novi Sad, Serbia);
+
+parcels: 44;
+search used: BFS
+number of actions to goal: 4
+list of actions: Travel(train_9;Brighton, UK;Novi Sad, Serbia);Load(parcel_44;train_9;Novi Sad, Serbia);Travel(train_9;Novi Sad, Serbia;Hamburg, Germany);Unload(parcel_44;train_9;Hamburg, Germany);
+
+parcels: 46;
+search used: BFS
+number of actions to goal: 4
+list of actions: Travel(train_9;Brighton, UK;Hamburg, Germany);Load(parcel_46;train_9;Hamburg, Germany);Travel(train_9;Hamburg, Germany;Novi Sad, Serbia);Unload(parcel_46;train_9;Novi Sad, Serbia);
+
+parcels: 43;
+search used: BFS
+number of actions to goal: 4
+list of actions: Travel(train_9;Brighton, UK;Hamburg, Germany);Load(parcel_43;train_9;Hamburg, Germany);Travel(train_9;Hamburg, Germany;Novi Sad, Serbia);Unload(parcel_43;train_9;Novi Sad, Serbia);
+
+parcels: 44;
+search used: BFS
+number of actions to goal: 4
+list of actions: Travel(train_9;Brighton, UK;Novi Sad, Serbia);Load(parcel_44;train_9;Novi Sad, Serbia);Travel(train_9;Novi Sad, Serbia;Hamburg, Germany);Unload(parcel_44;train_9;Hamburg, Germany);
+
+parcels: 46;
+search used: BFS
+number of actions to goal: 4
+list of actions: Travel(train_9;Brighton, UK;Hamburg, Germany);Load(parcel_46;train_9;Hamburg, Germany);Travel(train_9;Hamburg, Germany;Novi Sad, Serbia);Unload(parcel_46;train_9;Novi Sad, Serbia);
+
+parcels: 43;
+search used: BFS
+number of actions to goal: 4
+list of actions: Travel(train_9;Brighton, UK;Hamburg, Germany);Load(parcel_43;train_9;Hamburg, Germany);Travel(train_9;Hamburg, Germany;Novi Sad, Serbia);Unload(parcel_43;train_9;Novi Sad, Serbia);
+
+parcels: 44;
+search used: BFS
+number of actions to goal: 4
+list of actions: Travel(train_9;Brighton, UK;Novi Sad, Serbia);Load(parcel_44;train_9;Novi Sad, Serbia);Travel(train_9;Novi Sad, Serbia;Hamburg, Germany);Unload(parcel_44;train_9;Hamburg, Germany);
+
+parcels: 46;
+search used: BFS
+number of actions to goal: 4
+list of actions: Travel(train_9;Brighton, UK;Hamburg, Germany);Load(parcel_46;train_9;Hamburg, Germany);Travel(train_9;Hamburg, Germany;Novi Sad, Serbia);Unload(parcel_46;train_9;Novi Sad, Serbia);
+
+parcels: 43;
+search used: BFS
+number of actions to goal: 4
+list of actions: Travel(train_9;Brighton, UK;Hamburg, Germany);Load(parcel_43;train_9;Hamburg, Germany);Travel(train_9;Hamburg, Germany;Novi Sad, Serbia);Unload(parcel_43;train_9;Novi Sad, Serbia);
+
+parcels: 44;
+search used: BFS
+number of actions to goal: 4
+list of actions: Travel(train_9;Brighton, UK;Novi Sad, Serbia);Load(parcel_44;train_9;Novi Sad, Serbia);Travel(train_9;Novi Sad, Serbia;Hamburg, Germany);Unload(parcel_44;train_9;Hamburg, Germany);
+
+parcels: 43;
+search used: BFS
+number of actions to goal: 4
+list of actions: Travel(train_9;Brighton, UK;Hamburg, Germany);Load(parcel_43;train_9;Hamburg, Germany);Travel(train_9;Hamburg, Germany;Novi Sad, Serbia);Unload(parcel_43;train_9;Novi Sad, Serbia);
+
+parcels: 48;
+search used: BFS
+number of actions to goal: 4
+list of actions: Travel(train_9;Brighton, UK;Novi Sad, Serbia);Load(parcel_48;train_9;Novi Sad, Serbia);Travel(train_9;Novi Sad, Serbia;Hamburg, Germany);Unload(parcel_48;train_9;Hamburg, Germany);
+
+parcels: 48;
+search used: BFS
+number of actions to goal: 4
+list of actions: Travel(train_9;Brighton, UK;Novi Sad, Serbia);Load(parcel_48;train_9;Novi Sad, Serbia);Travel(train_9;Novi Sad, Serbia;Hamburg, Germany);Unload(parcel_48;train_9;Hamburg, Germany);
+
+parcels: 48;
+search used: BFS
+number of actions to goal: 4
+list of actions: Travel(train_9;Brighton, UK;Novi Sad, Serbia);Load(parcel_48;train_9;Novi Sad, Serbia);Travel(train_9;Novi Sad, Serbia;Hamburg, Germany);Unload(parcel_48;train_9;Hamburg, Germany);
+
+parcels: 48;
+search used: BFS
+number of actions to goal: 4
+list of actions: Travel(train_9;Brighton, UK;Novi Sad, Serbia);Load(parcel_48;train_9;Novi Sad, Serbia);Travel(train_9;Novi Sad, Serbia;Hamburg, Germany);Unload(parcel_48;train_9;Hamburg, Germany);
+
+parcels: 48;
+search used: BFS
+number of actions to goal: 4
+list of actions: Travel(train_9;Brighton, UK;Novi Sad, Serbia);Load(parcel_48;train_9;Novi Sad, Serbia);Travel(train_9;Novi Sad, Serbia;Hamburg, Germany);Unload(parcel_48;train_9;Hamburg, Germany);
+
+parcels: 48;
+search used: BFS
+number of actions to goal: 4
+list of actions: Travel(train_9;Brighton, UK;Novi Sad, Serbia);Load(parcel_48;train_9;Novi Sad, Serbia);Travel(train_9;Novi Sad, Serbia;Hamburg, Germany);Unload(parcel_48;train_9;Hamburg, Germany);
+
+parcels: 48;
+search used: BFS
+number of actions to goal: 4
+list of actions: Travel(train_9;Brighton, UK;Novi Sad, Serbia);Load(parcel_48;train_9;Novi Sad, Serbia);Travel(train_9;Novi Sad, Serbia;Hamburg, Germany);Unload(parcel_48;train_9;Hamburg, Germany);
+
+parcels: 48;
+search used: BFS
+number of actions to goal: 4
+list of actions: Travel(train_9;Brighton, UK;Novi Sad, Serbia);Load(parcel_48;train_9;Novi Sad, Serbia);Travel(train_9;Novi Sad, Serbia;Hamburg, Germany);Unload(parcel_48;train_9;Hamburg, Germany);
+
+parcels: 48;
+search used: BFS
+number of actions to goal: 4
+list of actions: Travel(train_9;Brighton, UK;Novi Sad, Serbia);Load(parcel_48;train_9;Novi Sad, Serbia);Travel(train_9;Novi Sad, Serbia;Hamburg, Germany);Unload(parcel_48;train_9;Hamburg, Germany);
+
+parcels: 48;
+search used: BFS
+number of actions to goal: 4
+list of actions: Travel(train_9;Brighton, UK;Novi Sad, Serbia);Load(parcel_48;train_9;Novi Sad, Serbia);Travel(train_9;Novi Sad, Serbia;Hamburg, Germany);Unload(parcel_48;train_9;Hamburg, Germany);
+
+parcels: 48;
+search used: BFS
+number of actions to goal: 4
+list of actions: Travel(train_9;Brighton, UK;Novi Sad, Serbia);Load(parcel_48;train_9;Novi Sad, Serbia);Travel(train_9;Novi Sad, Serbia;Hamburg, Germany);Unload(parcel_48;train_9;Hamburg, Germany);
+
+parcels: 48;
+search used: BFS
+number of actions to goal: 4
+list of actions: Travel(train_9;Brighton, UK;Novi Sad, Serbia);Load(parcel_48;train_9;Novi Sad, Serbia);Travel(train_9;Novi Sad, Serbia;Hamburg, Germany);Unload(parcel_48;train_9;Hamburg, Germany);
+
+parcels: 48;
+search used: BFS
+number of actions to goal: 4
+list of actions: Travel(train_9;Brighton, UK;Novi Sad, Serbia);Load(parcel_48;train_9;Novi Sad, Serbia);Travel(train_9;Novi Sad, Serbia;Hamburg, Germany);Unload(parcel_48;train_9;Hamburg, Germany);
+
+parcels: 48;
+search used: BFS
+number of actions to goal: 4
+list of actions: Travel(train_9;Brighton, UK;Novi Sad, Serbia);Load(parcel_48;train_9;Novi Sad, Serbia);Travel(train_9;Novi Sad, Serbia;Hamburg, Germany);Unload(parcel_48;train_9;Hamburg, Germany);
+
+parcels: 48;
+search used: BFS
+number of actions to goal: 4
+list of actions: Travel(train_9;Brighton, UK;Novi Sad, Serbia);Load(parcel_48;train_9;Novi Sad, Serbia);Travel(train_9;Novi Sad, Serbia;Hamburg, Germany);Unload(parcel_48;train_9;Hamburg, Germany);
+
+parcels: 48;
+search used: BFS
+number of actions to goal: 4
+list of actions: Travel(train_9;Brighton, UK;Novi Sad, Serbia);Load(parcel_48;train_9;Novi Sad, Serbia);Travel(train_9;Novi Sad, Serbia;Hamburg, Germany);Unload(parcel_48;train_9;Hamburg, Germany);
+
+parcels: 48;
+search used: BFS
+number of actions to goal: 4
+list of actions: Travel(train_9;Brighton, UK;Novi Sad, Serbia);Load(parcel_48;train_9;Novi Sad, Serbia);Travel(train_9;Novi Sad, Serbia;Hamburg, Germany);Unload(parcel_48;train_9;Hamburg, Germany);
+
+parcels: 50;
+search used: UCS
+number of actions to goal: 4
+list of actions: Travel(train_10;Skoplje, North Macedonia;Dubai - United Arab Emirates);Load(parcel_50;train_10;Dubai - United Arab Emirates);Travel(train_10;Dubai - United Arab Emirates;Barcelona, Spain);Unload(parcel_50;train_10;Barcelona, Spain);
+
+parcels: 49;
+search used: BFS
+number of actions to goal: 4
+list of actions: Travel(train_9;Brighton, UK;Dubai - United Arab Emirates);Load(parcel_49;train_9;Dubai - United Arab Emirates);Travel(train_9;Dubai - United Arab Emirates;Barcelona, Spain);Unload(parcel_49;train_9;Barcelona, Spain);
+
+parcels: 46;47;
+search used: BFS
+number of actions to goal: 7
+list of actions: Travel(train_9;Brighton, UK;Hamburg, Germany);Load(parcel_46;train_9;Hamburg, Germany);Travel(train_9;Hamburg, Germany;Novi Sad, Serbia);Load(parcel_47;train_9;Novi Sad, Serbia);Unload(parcel_46;train_9;Novi Sad, Serbia);Travel(train_9;Novi Sad, Serbia;Niš, Serbia);Unload(parcel_47;train_9;Niš, Serbia);
+
+parcels: 44;
+search used: BFS
+number of actions to goal: 4
+list of actions: Travel(train_9;Brighton, UK;Novi Sad, Serbia);Load(parcel_44;train_9;Novi Sad, Serbia);Travel(train_9;Novi Sad, Serbia;Hamburg, Germany);Unload(parcel_44;train_9;Hamburg, Germany);
+
+parcels: 51;
+search used: BFS
+number of actions to goal: 4
+list of actions: Travel(train_9;Brighton, UK;Novi Sad, Serbia);Load(parcel_51;train_9;Novi Sad, Serbia);Travel(train_9;Novi Sad, Serbia;Užice, Serbia);Unload(parcel_51;train_9;Užice, Serbia);
+

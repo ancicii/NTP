@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 
 from django.conf import settings
@@ -8,6 +8,9 @@ import json
 from django.core.mail import send_mail
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+
 from .forms import CreateUserForm, NewParcelForm, NewTrainForm, NewParcelFormUser
 from django.contrib import messages
 from .decorators import unauthenticated_user, allowed_users
@@ -49,54 +52,90 @@ def get_routes_to_plot(list_of_found):
 
 def send_email(parcel, type):
     email_from = settings.EMAIL_HOST_USER
-    if type == 'shipped':
-        subject = "Package has been sent"
-        messageSender = "Dear, {} {}. Thank you for choosing our shipping service." \
-                        "Your parcel for {} {} has been sent." \
-                        "You'll be notified when your shipment arrives at the destination.".format(parcel.senderSurname,
-                                                                                                   parcel.senderName,
-                                                                                                   parcel.receiverSurname,
-                                                                                                   parcel.receiverName)
-        subject1 = "Expect package"
-        messageReceiver = "Dear, {} {}." \
-                          "A parcel for you has been sent.".format(parcel.receiverSurname,
-                                                                   parcel.receiverName)
-        if parcel.receiver is not None:
-            recipient_list_receiver = [parcel.receiver.email, ]
-            send_mail(subject1, messageReceiver, email_from, recipient_list_receiver)
+    if type == 'shippedSender':
+        subject = 'Your Package Has Been Shipped'
+        context = {
+            'title': 'Your Package Has Been Shipped',
+            'name': "{} {}".format(parcel.senderSurname, parcel.senderName),
+            'message': "We want to inform you that a parcel for {} {} has been shipped."
+                       "You'll be notified when your shipment arrives at the destination.\n\n"
+                       "Thank you for choosing our shipping service.".format(parcel.receiverSurname,
+                                                                             parcel.receiverName),
+            'delivery_time_from': parcel.dateSent,
+            'delivery_time_to': parcel.dateSent + timedelta(days=10),
+            'is_delivery': True,
+        }
+        html_message = render_to_string('application/email.html', context)
+        plain_message = strip_tags(html_message)
+        recipient_list = [parcel.sender.email, ]
+        send_mail(subject, plain_message, email_from, recipient_list, html_message=html_message)
+    elif type == 'shippedReceiver':
+        subject = 'A Package for You is on its way'
+        context = {
+            'title': 'A Package for You is on its way',
+            'name': "{} {}".format(parcel.receiverSurname, parcel.receiverName),
+            'message': "We want to inform you that a parcel from {} {} has been shipped to your address."
+                       "Please let us know when you receive it.\n"
+                       "Thank you.".format(parcel.senderSurname, parcel.senderName),
+            'delivery_time_from': parcel.dateSent,
+            'delivery_time_to': parcel.dateSent + timedelta(days=10),
+            'is_delivery': True,
+        }
+        html_message = render_to_string('application/email.html', context)
+        plain_message = strip_tags(html_message)
+        recipient_list = [parcel.receiver.email, ]
+        send_mail(subject, plain_message, email_from, recipient_list, html_message=html_message)
 
-        recipient_list = [parcel.sender.email, ]
-        send_mail(subject, messageSender, email_from, recipient_list)
     elif type == 'approved':
-        subject = "Your package has been approved"
-        message = "Dear, {} {}. Thank you for choosing our shipping service." \
-                  "Your parcel for {} {} has been approved." \
-                  "You'll be notified when we ship it to desired location.".format(parcel.senderSurname,
-                                                                                   parcel.senderName,
-                                                                                   parcel.receiverSurname,
-                                                                                   parcel.receiverName)
+        subject = 'Your parcel has been approved'
+        context = {
+            'title': 'Your parcel has been approved',
+            'name': "{} {}".format(parcel.senderSurname, parcel.senderName),
+            'message': "We want to inform you that your parcel for {} {} has been approved."
+                       "You'll be notified when we ship it to desired location.\n\n"
+                       "Thank you for choosing our shipping service.".format(parcel.receiverSurname,
+                                                                             parcel.receiverName),
+            'delivery_time_from': None,
+            'delivery_time_to': None,
+            'is_delivery': False,
+        }
+        html_message = render_to_string('application/email.html', context)
+        plain_message = strip_tags(html_message)
         recipient_list = [parcel.sender.email, ]
-        send_mail(subject, message, email_from, recipient_list)
+        send_mail(subject, plain_message, email_from, recipient_list, html_message=html_message)
     elif type == 'declined':
-        subject = "Your package has been declined"
-        message = "Dear, {} {}." \
-                  "We regret to inform you that your parcel for {} {} has been declined." \
-                  "If you have additional questions you can contact us.".format(parcel.senderSurname,
-                                                                                parcel.senderName,
-                                                                                parcel.receiverSurname,
-                                                                                parcel.receiverName)
+        subject = 'Your parcel has been declined'
+        context = {
+            'title': 'Your parcel has been declined',
+            'name': "{} {}".format(parcel.senderSurname, parcel.senderName),
+            'message': "We want to inform you that your parcel for {} {} has been declined.\n\n"
+                       "If you have any additional questions please contact us."
+                .format(parcel.receiverSurname, parcel.receiverName),
+            'delivery_time_from': None,
+            'delivery_time_to': None,
+            'is_delivery': False,
+        }
+        html_message = render_to_string('application/email.html', context)
+        plain_message = strip_tags(html_message)
         recipient_list = [parcel.sender.email, ]
-        send_mail(subject, message, email_from, recipient_list)
+        send_mail(subject, plain_message, email_from, recipient_list, html_message=html_message)
     elif type == 'received':
-        subject = "Your package arrived at the destination"
-        message = "Dear, {} {}." \
-                  "We are glad to inform you that your parcel for {} {} arrived." \
-                  "Thank you for ......".format(parcel.senderSurname,
-                                                parcel.senderName,
-                                                parcel.receiverSurname,
-                                                parcel.receiverName)
+        subject = 'Your parcel arrived at its destination'
+        context = {
+            'title': 'Your parcel arrived at its destination',
+            'name': "{} {}".format(parcel.senderSurname, parcel.senderName),
+            'message': "We are glad to inform you that your parcel for {} {} arrived.\n\n"
+                       "Thank you for choosing our shipping service and we hope you continue to enjoy it!".format(
+                parcel.receiverSurname,
+                parcel.receiverName),
+            'delivery_time_from': None,
+            'delivery_time_to': None,
+            'is_delivery': False,
+        }
+        html_message = render_to_string('application/email.html', context)
+        plain_message = strip_tags(html_message)
         recipient_list = [parcel.sender.email, ]
-        send_mail(subject, message, email_from, recipient_list)
+        send_mail(subject, plain_message, email_from, recipient_list, html_message=html_message)
 
 
 @login_required(login_url="login")
@@ -129,7 +168,9 @@ def call_go_search_function(request):
         edit_parcel.dateSent = datetime.now()
         edit_parcel.save()
         if edit_parcel.sender is not None:
-            send_email(edit_parcel, 'shipped')
+            send_email(edit_parcel, 'shippedSender')
+        if edit_parcel.receiver is not None:
+            send_email(edit_parcel, 'shippedReceiver')
 
     request.session['all_routes'] = all_routes
     request.session['actions'] = list_of_found
@@ -163,8 +204,8 @@ def add_parcel(request):
         form = NewParcelForm(request.POST)
         if form.is_valid():
             instance = form.save(commit=False)
-            instance.price = instance.weight * 0.01 + calculate_distance(instance.destination_from,
-                                                                         instance.destination_to) * 0.02
+            instance.price = round((instance.weight * 0.01 + calculate_distance(instance.destination_from,
+                                                                         instance.destination_to) * 0.02), 2)
             instance.save()
             return redirect('home')
         else:
@@ -261,8 +302,8 @@ def send_parcels_user(request):
             instance.destination_from = request.user.city
             instance.sender = request.user
             instance.isApproved = False
-            instance.price = instance.weight * 0.01 + calculate_distance(instance.destination_from,
-                                                                         instance.destination_to) * 0.02
+            instance.price = round((instance.weight * 0.01 + calculate_distance(instance.destination_from,
+                                                                         instance.destination_to) * 0.02), 2)
             instance.save()
             return redirect('my-parcels')
         elif form1.is_valid() and typeReq == "user":
@@ -274,8 +315,8 @@ def send_parcels_user(request):
             instance.sender = request.user
             instance.isApproved = False
             instance.receiver = User.objects.get(mobile=instance.receiverContact)
-            instance.price = instance.weight * 0.01 + calculate_distance(instance.destination_from,
-                                                                         instance.destination_to) * 0.02
+            instance.price = round((instance.weight * 0.01 + calculate_distance(instance.destination_from,
+                                                                         instance.destination_to) * 0.02), 2)
             instance.save()
             return redirect('my-parcels')
         else:

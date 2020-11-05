@@ -1,5 +1,5 @@
 {% extends 'application/main.html' %}
-
+{% load filter_template %}
 {% block content %}
     <div class="page-wrapper bg-gra-01 p-t-90 font-poppins">
         <div class="wrapper wrapper--w680">
@@ -12,7 +12,41 @@
                     </div>
                     <div style="font-family: 'Trebuchet MS', Helvetica, sans-serif; margin-top: 20px">
                         {% for action in actions %}
-                            <p class="action">{{ action }}</p>
+                            {% if 'Travel' in action %}
+                                <div style="margin-bottom: 28px">
+                                <img src="../../../../static/images/trainIcon.png"
+                                style = "width:30px; height:30px;" alt="Train" title="Train">
+                                    {{ action|get_train_travel }}
+                                <img src="../../../../static/images/destination.png"
+                                style = "width:18px; height:24px; margin-left: 20px" alt="From" title="From">
+                                {{ action|get_city_from }}
+                                <img src="../../../../static/images/dots.png"
+                                style = "width:84px; height:6px" alt="Travel" title="Travel">
+                                <img src="../../../../static/images/destination.png"
+                                style = "width:18px; height:24px" alt="To" title="To">
+                                {{ action|get_city_to  }}
+                                </div>
+                            {% endif %}
+                            {% if 'Load' in action %}
+                                <div>
+                                <img src="../../../../static/images/load.png"
+                                style = "width:30px; height:30px; margin-right: 28px; margin-left:5px; margin-bottom:-25px" alt="Load" title="Load">
+                                    Load parcel {{ action|get_load_parcel }} in train {{ action|get_train_load }}
+                                </div>
+                                <div style="margin-bottom: 28px; margin-left: 70px">
+                                    ( {{ action|get_load_destination }} )
+                                </div>
+                            {% endif %}
+                            {% if 'Unload' in action %}
+                                 <div>
+                                <img src="../../../../static/images/unload.png"
+                                style = "width:30px; height:30px; margin-right: 28px;margin-left:5px; margin-bottom:-25px" alt="Unload" title="Unload">
+                                    Unload parcel {{ action|get_load_parcel }} from train {{ action|get_train_load }}
+                                </div>
+                                <div style="margin-bottom: 28px; margin-left: 70px">
+                                    ( {{ action|get_load_destination }} )
+                                </div>
+                            {% endif %}
                         {% endfor %}
 
                     </div>
@@ -36,7 +70,7 @@
         let renderArray = new Map();
         let colourArray = ['#d4614e', '#4e7bd4', '#ebf149', '#32c32f', '#53dbc2', '#9f56ee', '#d069b9', '#f36c25'];
         let pointerColor = ['red-dot.png', 'blue-dot.png', 'yellow-dot.png', 'green-dot.png', 'ltblue-dot.png',
-                            'purple-dot.png', 'pink-dot.png', 'orange-dot.png']
+            'purple-dot.png', 'pink-dot.png', 'orange-dot.png']
         let numberOfPlaces = 0;
 
         function fillPlaces() {
@@ -227,7 +261,7 @@
     <style>
         @keyframes animated-border {
             0% {
-                box-shadow: 0 0 0 0 rgb(191, 88, 214);
+                box-shadow: 0 0 0 0 rgb(49, 119, 181);
             }
             100% {
                 box-shadow: 0 0 0 20px rgba(22, 3, 3, 0);
@@ -246,9 +280,6 @@
             padding: 15px;
         }
 
-        .container {
-            background-color: #a58ed2
-        }
     </style>
 
 

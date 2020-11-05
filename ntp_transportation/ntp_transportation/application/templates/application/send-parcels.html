@@ -32,30 +32,73 @@
                             </tr>
                             <tr>
                                 <td colspan="4">
-                                    <p style="font-family:'Georgia'; margin-top: -10px"> Weight: {{ o.weight }}</p>
-                                    <p style="font-family:'Georgia'; margin-top: -15px"> Price: {{ o.price }}</p>
-                                    {% if o.sender is null %}
-                                        <p style="font-family:'Georgia'; margin-top: -15px">
-                                            Sender: {{ o.senderSurname }} {{ o.senderName }}</p>
-                                        <p style="font-family:'Georgia'; margin-top: -15px">Sender
-                                            Contact: {{ o.senderContact }}</p>
-                                    {% else %}
-                                        <p style="font-family:'Georgia'; margin-top: -15px">
-                                            Sender: {{ o.sender.surname }} {{ o.sender.name }}</p>
-                                        <p style="font-family:'Georgia'; margin-top: -15px">Sender
-                                            Contact: {{ o.sender.mobile }}</p>
-                                    {% endif %}
-                                    {% if o.receiver is null %}
-                                        <p style="font-family:'Georgia'; margin-top: -15px">
-                                            Receiver: {{ o.receiverSurname }} {{ o.receiverName }}</p>
-                                        <p style="font-family:'Georgia'; margin-top: -15px">Receiver
-                                            Contact: {{ o.receiverContact }}</p>
-                                    {% else %}
-                                        <p style="font-family:'Georgia'; margin-top: -15px">
-                                            Receiver: {{ o.receiver.surname }} {{ o.receiver.name }}</p>
-                                        <p style="font-family:'Georgia'; margin-top: -15px">Receiver
-                                            Contact: {{ o.receiver.mobile }}</p>
-                                    {% endif %}
+                                    <div class="row">
+                                        {% if o.sender is null %}
+                                            <div class="col">
+                                                <img src="../../../../static/images/sent.png"
+                                                     style="width:30px; height:30px; margin-right: 28px;margin-left:5px; margin-bottom:-28px"
+                                                     alt="Sender" title="Sender">
+                                                <div style="margin-left: 55px; margin-top:-20px;">
+                                                    <p style="font-family:'Georgia';">
+                                                        Sender: {{ o.senderSurname }} {{ o.senderName }}</p>
+                                                    <p style="font-family:'Georgia'; margin-top: -15px">Sender
+                                                        Contact: {{ o.senderContact }}</p>
+                                                </div>
+                                            </div>
+                                        {% else %}
+                                            <div class="col">
+                                                <img src="../../../../static/images/sent.png"
+                                                     style="width:30px; height:30px; margin-right: 28px;margin-left:5px; margin-bottom:-28px"
+                                                     alt="Sender" title="Sender">
+                                                <div style="margin-left: 55px; margin-top:-20px;">
+                                                    <p style="font-family:'Georgia';">
+                                                        Sender: {{ o.sender.surname }} {{ o.sender.name }}</p>
+                                                    <p style="font-family:'Georgia'; margin-top: -15px">Sender
+                                                        Contact: {{ o.sender.mobile }}</p>
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                        {% if o.receiver is null %}
+                                            <div class="col">
+                                                <img src="../../../../static/images/receive.png"
+                                                     style="width:30px; height:30px; margin-right: 28px;margin-left:5px; margin-bottom:-28px"
+                                                     alt="Receiver" title="Receiver">
+                                                <div style="margin-left: 55px; margin-top:-20px;">
+                                                    <p style="font-family:'Georgia';">
+                                                        Receiver: {{ o.receiverSurname }} {{ o.receiverName }}</p>
+                                                    <p style="font-family:'Georgia'; margin-top: -15px">Receiver
+                                                        Contact: {{ o.receiverContact }}</p>
+                                                </div>
+                                            </div>
+                                        {% else %}
+                                            <div class="col" style="margin-left:25px;">
+                                                <img src="../../../../static/images/receive.png"
+                                                     style="width:30px; height:30px; margin-right: 28px;margin-left:5px; margin-bottom:-28px"
+                                                     alt="Receiver" title="Receiver">
+                                                <div style="margin-left: 55px; margin-top:-20px;">
+                                                    <p style="font-family:'Georgia';">
+                                                        Receiver: {{ o.receiver.surname }} {{ o.receiver.name }}</p>
+                                                    <p style="font-family:'Georgia'; margin-top: -15px">Receiver
+                                                        Contact: {{ o.receiver.mobile }}</p>
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                        <div class="col">
+                                            <img src="../../../../static/images/weight.png"
+                                                     style="width:30px; height:30px;margin-left:65px; margin-bottom:-28px"
+                                                     alt="Weight" title="Weight">
+                                            <p style="font-family:'Georgia'; margin-left: 107px; margin-top: -7px">
+                                                Weight: {{ o.weight }}</p>
+                                        </div>
+                                        <div class="col">
+                                             <img src="../../../../static/images/price.png"
+                                                     style="width:30px; height:30px;margin-left:-95px; margin-bottom:-28px"
+                                                     alt="Price" title="Price">
+                                            <p style="font-family:'Georgia'; margin-top: -7px;margin-left: -50px;">
+                                                Price: {{ o.price }}</p>
+                                        </div>
+
+                                    </div>
                                 </td>
                             </tr>
                         {% endfor %}
@@ -93,7 +136,7 @@
             $("table").click(function (event) {
                 event.stopPropagation();
                 var $target = $(event.target);
-                if (!$target.hasClass('checkbox-row') && !$target.is('p')) {
+                if (!$target.hasClass('checkbox-row') && !$target.is('p') && !$target.is('img') && !$target.is('div')) {
                     console.log($target.closest("td"))
                     if ($target.closest("td").attr("colspan") > 1) {
                         $target.slideUp();
@@ -130,12 +173,6 @@
             })
         });
     </script>
-
-    <style>
-        .container {
-            background-color: #a58ed2
-        }
-    </style>
 
 
 {% endblock content %}
